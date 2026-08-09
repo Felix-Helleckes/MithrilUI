@@ -95,6 +95,22 @@
   ],
   "rules": [
     {
+      "$note": [
+        "HUD ornament, matched before anything else. These are the carved",
+        "plates behind the morale globe, the opponent frame and the gambit",
+        "display, shipped in dozens of anniversary and cosmetic variants.",
+        "",
+        "They are decoration wrapped around a bar, not a background behind",
+        "content, so filling them produces exactly the dark slab under the",
+        "character that made this look worse rather than cleaner. They go."
+      ],
+      "match": "(vitals|gambit)",
+      "role": "sweepClear",
+      "color": "panel",
+      "opacity": 0.0,
+      "debugColor": "#ff0000"
+    },
+    {
       "$note": "Hover feedback. Kept, because losing it makes the UI feel dead.",
       "match": "(_rollover|_mouseover|_hover|_highlighted)$",
       "role": "sweepHover",
@@ -141,6 +157,18 @@
       "color": "panelAlt",
       "opacity": 0.55,
       "debugColor": "#0088ff"
+    },
+    {
+      "$note": [
+        "Window bodies. Without this the catch-all clears them and panels go",
+        "see-through, which is how the options window ended up transparent.",
+        "These sit behind content, so a dark fill is right here."
+      ],
+      "match": "(_window_|window_|^box_|_box_|_backing|startmenu|storage|wallet|trait_tree)",
+      "role": "sweepPanel",
+      "color": "panel",
+      "opacity": 0.72,
+      "debugColor": "#ff00ff"
     },
     {
       "$note": "Rules and separators stay visible as a hairline",
