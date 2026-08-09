@@ -20,7 +20,9 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import stat
 import sys
+import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -69,6 +71,36 @@ def find_game_dir(override: str | None = None) -> Path:
     )
 
 
+def remove_tree(target: Path, attempts: int = 4) -> None:
+    """Delete a folder even when OneDrive is being difficult.
+
+    Documents is routinely redirected into OneDrive, which marks synced files
+    read-only and briefly holds handles while it uploads. A plain rmtree hits
+    PermissionError on both. So: clear the read-only bit on failure, and retry
+    a couple of times to let a sync operation finish.
+    """
+    def clear_readonly(func, path, _exc):
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+
+    for attempt in range(attempts):
+        try:
+            if sys.version_info >= (3, 12):
+                shutil.rmtree(target, onexc=clear_readonly)
+            else:
+                shutil.rmtree(target, onerror=clear_readonly)
+            return
+        except PermissionError:
+            if attempt == attempts - 1:
+                raise SystemExit(
+                    f"Could not replace {target}.\n"
+                    "Something is holding those files open. Close the LOTRO client "
+                    "(and the LOTRO launcher), pause OneDrive sync if it is running, "
+                    "then try again."
+                )
+            time.sleep(0.6 * (attempt + 1))
+
+
 def place(source: Path, target: Path, link: bool, dry_run: bool) -> str:
     """Copy or link `source` onto `target`, replacing whatever is there."""
     action = "link" if link else "copy"
@@ -78,7 +110,7 @@ def place(source: Path, target: Path, link: bool, dry_run: bool) -> str:
     if target.is_symlink() or (target.exists() and target.is_dir() and os.path.islink(target)):
         target.unlink()
     elif target.exists():
-        shutil.rmtree(target)
+        remove_tree(target)
 
     target.parent.mkdir(parents=True, exist_ok=True)
     if link:
@@ -92,7 +124,7 @@ def place(source: Path, target: Path, link: bool, dry_run: bool) -> str:
             ) from exc
     else:
         shutil.copytree(source, target)
-    return f"{action}ed {source.name} -> {target}"
+    return f"{'linked' if link else 'copied'} {source.name} -> {target}"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -120,14 +152,14 @@ def main(argv: list[str] | None = None) -> int:
             for path in skins_dir.glob("MithrilUI*"):
                 print(f"  removing {path}")
                 if not args.dry_run:
-                    path.unlink() if path.is_symlink() else shutil.rmtree(path)
+                    path.unlink() if path.is_symlink() else remove_tree(path)
                 removed += 1
         if do_plugins:
             target = plugins_dir / "MithrilUI"
             if target.exists() or target.is_symlink():
                 print(f"  removing {target}")
                 if not args.dry_run:
-                    target.unlink() if target.is_symlink() else shutil.rmtree(target)
+                    target.unlink() if target.is_symlink() else remove_tree(target)
                 removed += 1
         print(f"Removed {removed} item(s)."
               + (" (dry run -- nothing changed)" if args.dry_run else ""))

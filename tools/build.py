@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import sys
 import time
@@ -42,12 +43,44 @@ def load_profile(name: str) -> dict:
         return json.load(handle)
 
 
+def detect_resolution() -> list[int]:
+    """Read the resolution out of LOTRO's own UserPreferences.ini.
+
+    Getting this wrong is the single easiest way to end up with a toolbar in
+    the wrong place, and the answer is sitting in a file we can already find.
+    """
+    import install  # local import: only needed for --resolution auto
+
+    game_dir = install.find_game_dir()
+    prefs = game_dir / "UserPreferences.ini"
+    if not prefs.exists():
+        raise SystemExit(
+            f"No UserPreferences.ini in {game_dir}. "
+            "Start the game once, or pass an explicit --resolution."
+        )
+
+    text = prefs.read_text(encoding="utf-8", errors="replace")
+    # Prefer the active mode's value; fall back to whichever key is present.
+    for key in ("WindowedResolution", "Resolution"):
+        match = re.search(rf"^{key}\s*=\s*(\d+)\s*[xX]\s*(\d+)", text, re.MULTILINE)
+        if match:
+            return [int(match.group(1)), int(match.group(2))]
+
+    raise SystemExit(
+        f"Could not find a Resolution entry in {prefs}. Pass --resolution WxH."
+    )
+
+
 def parse_resolution(text: str) -> list[int]:
+    if text.strip().lower() == "auto":
+        resolution = detect_resolution()
+        print(f"detected resolution {resolution[0]}x{resolution[1]} from UserPreferences.ini")
+        return resolution
     for separator in ("x", "X", "*", ","):
         if separator in text:
             width, height = text.split(separator, 1)
             return [int(width.strip()), int(height.strip())]
-    raise SystemExit(f"Cannot read resolution '{text}'. Use e.g. 1920x1080.")
+    raise SystemExit(f"Cannot read resolution '{text}'. Use e.g. 1920x1080, or 'auto'.")
 
 
 def folder_name(profile: dict, theme: Theme) -> str:
@@ -147,7 +180,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--profile", default="default", help="profile name (default: default)")
     parser.add_argument("--theme", help="theme id, overrides the profile's choice")
-    parser.add_argument("--resolution", help="override screen resolution, e.g. 2560x1440")
+    parser.add_argument("--resolution",
+                        help="screen resolution, e.g. 2560x1440, or 'auto' to read it "
+                             "from LOTRO's UserPreferences.ini")
     parser.add_argument("--all", action="store_true", help="build every profile x theme combination")
     parser.add_argument("--rle", action="store_true",
                         help="RLE-compress TGAs (much smaller; verify in-game before relying on it)")
