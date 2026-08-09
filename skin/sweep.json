@@ -1,0 +1,142 @@
+{
+  "$comment": [
+    "The sweep: flatten everything the hand-written manifest does not cover.",
+    "",
+    "The official ArtAssetID dictionary dates from 2007 and lists ~180 assets.",
+    "A real modern skin replaces ~2600. Covering only the documented ones",
+    "repaints about 5% of the interface, which reads as 'nothing changed'.",
+    "",
+    "So: skin/dictionary.txt holds the full ID list, and these ordered rules",
+    "assign each one a flat colour. First match wins. Anything matching an",
+    "exclude pattern is left alone.",
+    "",
+    "Every sweep asset is a SOLID FILL with no border and no 9-slice detail.",
+    "That is deliberate: a solid colour looks identical whether the client",
+    "stretches, tiles or crops it, so we do not need to know the dimension the",
+    "game expects. Assets where a border or a corner actually matters live in",
+    "assets.json with their documented size and always take precedence.",
+    "",
+    "Because the fills are solid, all IDs sharing a role point at ONE file.",
+    "~2200 mappings cost about eight TGAs."
+  ],
+
+  "sharedAssetSize": [128, 128],
+
+  "$excludeComment": [
+    "Pictograms and state colours. Flattening these would destroy information:",
+    "you would lose quest difficulty, item rarity, class resource pips and",
+    "every icon in the game."
+  ],
+  "exclude": [
+    "icon",
+    "coloredBoxes",
+    "_con_",
+    "^alert",
+    "portrait",
+    "cursor",
+    "crosshair",
+    "quality",
+    "rarity",
+    "^class_",
+    "^race_",
+    "trait",
+    "skill",
+    "emote",
+    "pip",
+    "arrow",
+    "checkmark",
+    "^check_",
+    "^map_",
+    "waypoint",
+    "compass",
+    "^rank",
+    "^star",
+    "difficulty",
+    "^loading",
+    "splash",
+    "logo",
+    "mouse",
+    "keyboard",
+    "gamepad",
+    "controller"
+  ],
+
+  "$rulesComment": [
+    "Ordered. State suffixes are matched before the generic 'button' rule so",
+    "that button_foo_pressed becomes the pressed colour rather than the normal",
+    "one. `color` and `opacity` are theme role names."
+  ],
+  "rules": [
+    {
+      "$note": "Pressed / held states",
+      "match": "(_pressed|_press|_depressed|_down)$",
+      "role": "sweepButtonDown",
+      "color": "buttonDown",
+      "opacity": "button"
+    },
+    {
+      "$note": "Hover states",
+      "match": "(_rollover|_mouseover|_hover|_highlighted)$",
+      "role": "sweepButtonHover",
+      "color": "buttonHover",
+      "opacity": "button"
+    },
+    {
+      "$note": "Disabled / unavailable states",
+      "match": "(_ghosted|_disabled|_inactive|_off)$",
+      "role": "sweepButtonDisabled",
+      "color": "buttonDisabled",
+      "opacity": "button"
+    },
+    {
+      "$note": "Selection and highlight washes",
+      "match": "(highlight|selected|selection|_active|_on$)",
+      "role": "sweepSelection",
+      "color": "accent",
+      "opacity": "selection"
+    },
+    {
+      "$note": "Buttons in their resting state",
+      "match": "button",
+      "role": "sweepButton",
+      "color": "button",
+      "opacity": "button"
+    },
+    {
+      "$note": "Backgrounds and backdrops. The ornate vitals frames live here.",
+      "match": "(backdrop|background|_bg$|_bg_|_BG$|_BG_)",
+      "role": "sweepPanel",
+      "color": "panel",
+      "opacity": "panel"
+    },
+    {
+      "$note": "Tabs sit slightly lighter than the panel they belong to",
+      "match": "tab",
+      "role": "sweepPanelAlt",
+      "color": "panelAlt",
+      "opacity": "panel"
+    },
+    {
+      "$note": "Rules and separators",
+      "match": "(divider|separator|_line$|_rule$)",
+      "role": "sweepBorder",
+      "color": "border",
+      "opacity": 1.0
+    },
+    {
+      "$note": "Everything structural: boxes, frames, panels, fields, windows",
+      "match": "(box|panel|frame|field|window|border|backing|plate|scroll|list|entry|header|footer|title|bar$|_bar_|meter|vitals|banner|corner|edge|middle|_mid_|_top$|_bottom$|_left$|_right$|center)",
+      "role": "sweepPanel",
+      "color": "panel",
+      "opacity": "panel"
+    },
+    {
+      "$note": "Catch-all. Set sweepCatchAll false in a profile to skip this.",
+      "match": ".",
+      "role": "sweepPanel",
+      "color": "panel",
+      "opacity": "panel",
+      "catchAll": true
+    }
+  ]
+}

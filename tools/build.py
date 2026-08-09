@@ -155,6 +155,30 @@ def build_one(
     print(f"   art      {len(art_records)} assets, {total_bytes / 1024 / 1024:.1f} MB "
           f"({time.perf_counter() - started:.1f}s)")
 
+    # The sweep flattens everything the hand-written manifest misses, which is
+    # most of the interface: the documented dictionary covers about 5% of it.
+    if "sweep" in modules:
+        explicit_ids = {entry["id"] for entry in gen_art.load_manifest(SKIN_DIR / "assets.json")}
+        sweep_records, stats = gen_art.generate_sweep(
+            SKIN_DIR / "dictionary.txt",
+            SKIN_DIR / "sweep.json",
+            theme,
+            target,
+            explicit_ids=explicit_ids,
+            rle=rle,
+            catch_all=profile.get("options", {}).get("sweepCatchAll", True),
+            verbose=verbose,
+        )
+        art_records = art_records + sweep_records
+        sweep_bytes = sum(r["bytes"] for r in sweep_records)
+        print(f"   sweep    {stats['swept']} mappings over "
+              f"{len({r['file'] for r in sweep_records})} shared fills "
+              f"({sweep_bytes / 1024:.0f} KB)")
+        print(f"            {stats['excluded']} left alone (icons, state colours), "
+              f"{stats['explicit']} already hand-tuned, "
+              f"{stats['catchAll']} via catch-all"
+              + (f", {stats['unmatched']} unmatched" if stats["unmatched"] else ""))
+
     layout_xml, layout_used = gen_skin.render_layout_modules(
         SKIN_DIR / "layout", profile.get("layoutModules", []), profile
     )

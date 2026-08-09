@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from pathlib import Path
 
 from tga import Canvas, RGBA, clamp
@@ -289,6 +290,95 @@ def r_gradient(canvas: Canvas, theme: Theme, params: dict) -> None:
 
 
 # -- manifest driving ----------------------------------------------------
+
+
+def generate_sweep(
+    dictionary_path: str | Path,
+    rules_path: str | Path,
+    theme: Theme,
+    out_dir: str | Path,
+    explicit_ids: set[str],
+    rle: bool = False,
+    catch_all: bool = True,
+    verbose: bool = False,
+) -> tuple[list[dict], dict[str, int]]:
+    """Flatten every ArtAssetID the hand-written manifest does not cover.
+
+    The documented dictionary is from 2007 and lists a fraction of what the
+    modern client actually draws, so covering only it leaves the interface
+    looking untouched. This assigns a flat colour to the rest by name pattern.
+
+    Because every sweep asset is a solid fill, all IDs sharing a role can point
+    at the same file: thousands of mappings cost a handful of TGAs, and the
+    exact dimension the game expects stops mattering.
+    """
+    out_dir = Path(out_dir)
+    with Path(rules_path).open(encoding="utf-8") as handle:
+        config = json.load(handle)
+
+    size = config.get("sharedAssetSize", [128, 128])
+    excludes = [re.compile(pattern, re.IGNORECASE) for pattern in config.get("exclude", [])]
+    rules = []
+    for rule in config.get("rules", []):
+        if rule.get("catchAll") and not catch_all:
+            continue
+        rules.append((re.compile(rule["match"], re.IGNORECASE), rule))
+
+    ids = [
+        line.strip()
+        for line in Path(dictionary_path).read_text(encoding="utf-8-sig").splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
+
+    shared: dict[str, str] = {}       # role -> relative file path
+    written: list[dict] = []
+    stats = {
+        "total": len(ids), "explicit": 0, "excluded": 0,
+        "swept": 0, "unmatched": 0, "catchAll": 0,
+    }
+
+    for asset_id in ids:
+        if asset_id in explicit_ids:
+            stats["explicit"] += 1
+            continue
+        if any(pattern.search(asset_id) for pattern in excludes):
+            stats["excluded"] += 1
+            continue
+
+        matched = next((rule for pattern, rule in rules if pattern.search(asset_id)), None)
+        if matched is None:
+            stats["unmatched"] += 1
+            continue
+
+        if matched.get("catchAll"):
+            stats["catchAll"] += 1
+
+        role = matched["role"]
+        if role not in shared:
+            canvas = Canvas(size[0], size[1])
+            canvas.fill_rect(
+                0, 0, size[0], size[1],
+                theme.color(matched["color"], opacity=matched.get("opacity")),
+            )
+            relative = Path("art") / "sweep" / f"{role}.tga"
+            canvas.save(out_dir / relative, rle=rle)
+            shared[role] = relative.as_posix().replace("/", "\\")
+            if verbose:
+                print(f"  shared fill: {role}")
+
+        written.append(
+            {"id": asset_id, "file": shared[role], "module": "sweep", "bytes": 0}
+        )
+        stats["swept"] += 1
+
+    # Record the real file sizes once, against the first mapping that uses each.
+    counted: set[str] = set()
+    for record in written:
+        if record["file"] not in counted:
+            counted.add(record["file"])
+            record["bytes"] = (out_dir / Path(record["file"].replace("\\", "/"))).stat().st_size
+
+    return written, stats
 
 
 def load_manifest(path: str | Path) -> list[dict]:

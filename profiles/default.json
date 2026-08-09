@@ -19,7 +19,8 @@
     "tabs",
     "selection",
     "combat",
-    "misc"
+    "misc",
+    "sweep"
   ],
   "layoutModules": [],
   "options": {}
