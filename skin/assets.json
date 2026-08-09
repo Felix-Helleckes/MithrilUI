@@ -207,6 +207,15 @@
     { "id": "tga_empty", "size": [2, 2], "recipe": "hidden", "params": {}, "module": "misc" },
 
     {
+      "$group": "The map player marker. 28x28 confirmed against a shipping skin.",
+      "$group2": "Drawn here rather than left to the client, because leaving it",
+      "$group3": "alone only holds while no rule reaches it, and it has gone",
+      "$group4": "missing twice. An explicit mapping cannot be swept away.",
+      "module": "misc"
+    },
+    { "id": "note_avatar", "size": [28, 28], "recipe": "arrow", "params": { "color": "#e11d1d", "outline": "#000000" }, "module": "misc" },
+
+    {
       "$group": "Pure ornament. Off by default because hiding decoration can hide",
       "$group2": "state you actually want (the dread meter backdrop, for example).",
       "module": "experimental"

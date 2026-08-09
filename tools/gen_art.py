@@ -284,6 +284,66 @@ def r_ring(canvas: Canvas, theme: Theme, params: dict) -> None:
     )
 
 
+def _fill_polygon(canvas: Canvas, points, color: RGBA, samples: int = 3) -> None:
+    """Scanline fill with supersampled coverage, so diagonal edges do not look
+    like staircases at 28 pixels across."""
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    x0, x1 = max(0, int(min(xs))), min(canvas.width, int(max(xs)) + 1)
+    y0, y1 = max(0, int(min(ys))), min(canvas.height, int(max(ys)) + 1)
+
+    def inside(px: float, py: float) -> bool:
+        hit = False
+        count = len(points)
+        for i in range(count):
+            ax, ay = points[i]
+            bx, by = points[(i + 1) % count]
+            if (ay > py) != (by > py):
+                cross = ax + (py - ay) / (by - ay) * (bx - ax)
+                if px < cross:
+                    hit = not hit
+        return hit
+
+    step = 1.0 / (samples + 1)
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            covered = 0
+            for sy in range(samples):
+                for sx in range(samples):
+                    if inside(x + (sx + 1) * step, y + (sy + 1) * step):
+                        covered += 1
+            if covered:
+                alpha = color[3] * covered / (samples * samples)
+                canvas.blend_pixel(x, y, (color[0], color[1], color[2], clamp(alpha)))
+
+
+@recipe("arrow")
+def r_arrow(canvas: Canvas, theme: Theme, params: dict) -> None:
+    """The map player marker: a crisp dart with a dark outline.
+
+    Drawn rather than left to the client because "leave it alone" only works
+    while no rule touches it, and this asset has been lost twice already. A
+    generated arrow is one the skin controls and cannot silently drop.
+
+    Red by default: it has to stay findable against parchment, snow and
+    night-time terrain alike, which the theme's muted palette would not.
+    """
+    w, h = canvas.width, canvas.height
+    fill = theme.color(params.get("color", "#e11d1d"))
+    outline = theme.color(params.get("outline", "#000000"))
+
+    def shape(inset: float):
+        return [
+            (w * 0.5, h * (0.02 + inset)),                    # tip
+            (w * (0.97 - inset), h * (0.97 - inset)),          # right base
+            (w * 0.5, h * (0.68 - inset * 0.5)),               # notch
+            (w * (0.03 + inset), h * (0.97 - inset)),          # left base
+        ]
+
+    _fill_polygon(canvas, shape(0.0), outline)
+    _fill_polygon(canvas, shape(0.14), fill)
+
+
 @recipe("gradient")
 def r_gradient(canvas: Canvas, theme: Theme, params: dict) -> None:
     top = theme.color(params.get("from", "panelAlt"), opacity=params.get("opacity", "panel"))
