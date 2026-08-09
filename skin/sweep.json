@@ -114,6 +114,30 @@
       "debugColor": "#ff0000"
     },
     {
+      "$note": [
+        "The toolbar plate: the wooden bar the action slots sit on, its end",
+        "caps and its glass sheen. This is the single largest piece of chrome",
+        "on screen, so it goes and the action icons float.",
+        "",
+        "Matched exactly, because letterbox_bottom_Switch_* are the action bar",
+        "page arrows and SwitchCenter_sword/shield is the stance indicator.",
+        "Those carry information and must survive."
+      ],
+      "match": "^letterbox_bottom(_mc|_glass_overlay|_(left|right)(_mid)?_cap)?$",
+      "role": "sweepClear",
+      "color": "panel",
+      "opacity": 0.0,
+      "debugColor": "#ff0000"
+    },
+    {
+      "$note": "The store button plate, which renders as a dark slab otherwise.",
+      "match": "^toolbar_webstore_button_",
+      "role": "sweepClear",
+      "color": "panel",
+      "opacity": 0.0,
+      "debugColor": "#ff0000"
+    },
+    {
       "$note": "Hover feedback. Kept, because losing it makes the UI feel dead.",
       "match": "(_rollover|_mouseover|_hover|_highlighted)$",
       "role": "sweepHover",

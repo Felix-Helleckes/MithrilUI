@@ -1,0 +1,74 @@
+<!--
+  Bigger morale and power bars.
+
+  The stock bars are sized for a 2007 screen. At 1440p they are a thin sliver
+  next to your portrait. This restates the vitals panel at a size you choose.
+
+  Everything is a number in your profile's `options`:
+
+    vitalsX / vitalsY          where the panel sits
+    vitalsWidth / vitalsHeight the panel as a whole
+    vitalBarWidth              length of the morale and power bars
+    vitalBarHeight             thickness of one bar
+    vitalBarGap                space between morale and power
+    vitalBarLeft               how far the bars start from the panel's left
+                               edge, i.e. room for the portrait
+    vitalBarTop                first bar's offset from the panel top
+
+  Same caveat as the toolbar module: declaring a child forces declaring its
+  parents, so this fixes the panel position and Ctrl+\ will no longer move it.
+
+  The defaults are proportional guesses, not measurements. Expect to adjust
+  vitalBarLeft and vitalBarTop once so the bars line up with the portrait.
+-->
+<PanelFile ID="ID_UISkin_AvatarPanel">
+
+  <Element ID="VitalsParent"
+           X="{{ vitalsX }}" Y="{{ vitalsY }}"
+           Width="{{ vitalsWidth }}" Height="{{ vitalsHeight }}">
+
+    <Element ID="VitalsField" X="0" Y="0"
+             Width="{{ vitalsWidth }}" Height="{{ vitalsHeight }}">
+
+      <!-- @if hideVitalsBackground -->
+      <Element ID="VitalsBg" X="0" Y="0" Width="1" Height="1"></Element>
+      <!-- @endif -->
+
+      <!-- @if hideVitalsAnimations -->
+      <Element ID="PlayerVitals_Animations" X="0" Y="0" Width="1" Height="1"></Element>
+      <!-- @endif -->
+
+      <!-- Morale -->
+      <Element ID="VitalHealthParentField"
+               X="{{ vitalBarLeft }}" Y="{{ vitalBarTop }}"
+               Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}">
+        <Element ID="VitalHealthField" X="0" Y="0"
+                 Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}">
+          <Element ID="VitalHealthBackground" X="0" Y="0"
+                   Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+          <Element ID="VitalCurrentHealthMeter" X="0" Y="0"
+                   Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+          <Element ID="VitalTemporaryHealthMeter" X="0" Y="0"
+                   Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+          <Element ID="VitalCurrentHealthText" X="0" Y="0"
+                   Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+        </Element>
+      </Element>
+
+      <!-- Power -->
+      <Element ID="VitalPowerField"
+               X="{{ vitalBarLeft }}" Y="{{ vitalBarTop + vitalBarHeight + vitalBarGap }}"
+               Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}">
+        <Element ID="VitalPowerBackground" X="0" Y="0"
+                 Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+        <Element ID="VitalCurrentPowerMeter" X="0" Y="0"
+                 Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+        <Element ID="VitalTemporaryPowerMeter" X="0" Y="0"
+                 Width="{{ vitalBarWidth }}" Height="{{ vitalBarHeight }}"></Element>
+      </Element>
+
+    </Element>
+
+  </Element>
+
+</PanelFile>

@@ -1,0 +1,110 @@
+<!--
+  Straighten the toolbar.
+
+  By default the buttons flanking the action bar sit at staggered heights,
+  following the curve of the wooden plate they were drawn on. With the plate
+  gone the stagger has nothing to follow and just looks crooked, so this puts
+  every side button on one baseline at a uniform size.
+
+  HOW THIS WORKS, and why the numbers below are only a starting point:
+
+  The skin engine has no "align" verb. The only way to straighten elements is
+  to state every one of their positions explicitly, which also means stating
+  their parent's geometry. So this module fully determines the toolbar layout
+  rather than nudging it, and the defaults are computed from your resolution
+  rather than measured from the client.
+
+  Expect one tuning round. Everything you would want to change is a number in
+  your profile's `options`, no XML editing:
+
+    toolbarWidth / toolbarHeight    the strip the whole toolbar occupies
+    sideButtonSize                  edge length of one flanking button
+    sideButtonGap                   space between them
+    sideButtonY                     baseline, measured from the toolbar top
+    sideButtonRows                  1 for a single row, 2 to stack them
+    mainBarWidth                    width reserved for the action slots
+
+  TRADE-OFF: once a position is written here, the skin wins over the game's
+  own UI layout tool. Ctrl+\ can no longer move the toolbar. That is inherent
+  to skin-side positioning, not a limitation of this module.
+-->
+<PanelFile ID="ID_UISkin_Toolbar">
+
+  <Element ID="ToolbarField"
+           X="{{ (screenWidth - toolbarWidth) / 2 }}"
+           Y="{{ screenHeight - toolbarHeight }}"
+           Width="{{ toolbarWidth }}"
+           Height="{{ toolbarHeight }}">
+
+    <!-- The action slots, centred; the side buttons flank this. -->
+    <Element ID="ToolbarFieldMain"
+             X="{{ (toolbarWidth - mainBarWidth) / 2 }}"
+             Y="0"
+             Width="{{ mainBarWidth }}"
+             Height="{{ toolbarHeight }}">
+
+      <!-- @if hideLevelMeterGlass -->
+      <Element ID="ToolbarFieldMain_LevelMeter_Glass_Overlay" X="0" Y="0" Width="1" Height="1"></Element>
+      <!-- @endif -->
+
+      <!-- @if hideLevelMeterCaps -->
+      <Element ID="ToolbarFieldMain_LevelMeter_Left_Cap" X="0" Y="0" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Mid_Left_Cap" X="0" Y="0" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Mid_Right_Cap" X="0" Y="0" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Right_Cap" X="0" Y="0" Width="1" Height="1"></Element>
+      <!-- @endif -->
+
+    </Element>
+
+    <!-- @if hideWebstoreButton -->
+    <!-- The store button. Its plate is cleared in art as well, so hiding the
+         element here is what stops it being an invisible click target. -->
+    <Element ID="Toolbar_WebstoreButton" X="0" Y="0" Width="1" Height="1"></Element>
+    <!-- @endif -->
+
+    <!--
+      Left cluster. Row 1 runs 1..4, row 2 runs 5..7 when sideButtonRows is 2,
+      otherwise everything stays on one line. The arithmetic is written out
+      per button because the template language has no loop, which also makes
+      it obvious what to nudge if one button lands wrong.
+    -->
+    <Element ID="ToolbarButton_Slot_1" X="{{ leftEdge + 0 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolbarButton_Slot_2" X="{{ leftEdge + 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_Slot_3" X="{{ leftEdge + 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolbarButton_Slot_4" X="{{ leftEdge + 3 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+
+    <!-- @if sideButtonsStacked -->
+    <Element ID="ToolbarButton_Slot_5" X="{{ leftEdge + 0 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_Slot_6" X="{{ leftEdge + 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolbarButton_Slot_7" X="{{ leftEdge + 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <!-- @endif -->
+
+    <!-- @if !sideButtonsStacked -->
+    <Element ID="ToolbarButton_Slot_5" X="{{ leftEdge + 4 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_Slot_6" X="{{ leftEdge + 5 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolbarButton_Slot_7" X="{{ leftEdge + 6 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <!-- @endif -->
+
+    <!-- Right cluster, mirrored: laid out leftwards from the right edge. -->
+    <Element ID="ToolbarButton_RightSlot_1" X="{{ rightEdge - 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_2" X="{{ rightEdge - 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_3" X="{{ rightEdge - 3 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_4" X="{{ rightEdge - 4 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+
+    <!-- @if sideButtonsStacked -->
+    <Element ID="ToolBarButton_RightSlot_5" X="{{ rightEdge - 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_6" X="{{ rightEdge - 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_7" X="{{ rightEdge - 3 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_8" X="{{ rightEdge - 4 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <!-- @endif -->
+
+    <!-- @if !sideButtonsStacked -->
+    <Element ID="ToolBarButton_RightSlot_5" X="{{ rightEdge - 5 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_6" X="{{ rightEdge - 6 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_7" X="{{ rightEdge - 7 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_8" X="{{ rightEdge - 8 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <!-- @endif -->
+
+  </Element>
+
+</PanelFile>

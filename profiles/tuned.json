@@ -1,0 +1,65 @@
+{
+  "id": "tuned",
+  "name": "MithrilUI Tuned",
+  "$comment": [
+    "Everything in `default`, plus the two layout modules: a straightened",
+    "toolbar with the store button removed, and enlarged morale/power bars.",
+    "",
+    "Build for your own resolution or the whole thing lands wrong:",
+    "  python tools/build.py --profile tuned --resolution auto",
+    "",
+    "READ THIS BEFORE USING IT. Positions written by a skin override the",
+    "game's own UI layout tool, so Ctrl+\\ can no longer move the toolbar or",
+    "the vitals panel. That is inherent to skin-side positioning. If you would",
+    "rather keep them movable, stay on `default`.",
+    "",
+    "The numbers below are computed or estimated, not measured off a client.",
+    "Expect one round of nudging. The ones most likely to need it are",
+    "sideButtonY, vitalBarLeft and vitalBarTop."
+  ],
+  "theme": "mithril-dark",
+  "resolution": [2560, 1440],
+  "artModules": [
+    "panels",
+    "titlebar",
+    "buttons",
+    "chat",
+    "tabs",
+    "selection",
+    "combat",
+    "misc",
+    "sweep"
+  ],
+  "layoutModules": ["toolbar-align", "vitals-size"],
+  "options": {
+    "sweepCatchAll": false,
+
+    "$toolbar": "Widths are generous on purpose: too wide only adds empty space, too narrow clips buttons.",
+    "toolbarWidth": 1100,
+    "toolbarHeight": 64,
+    "mainBarWidth": 560,
+    "leftEdge": 8,
+    "rightEdge": 1092,
+    "sideButtonSize": 32,
+    "sideButtonGap": 2,
+    "sideButtonY": 16,
+    "sideButtonsStacked": false,
+
+    "hideWebstoreButton": true,
+    "hideLevelMeterGlass": true,
+    "hideLevelMeterCaps": true,
+
+    "$vitals": "Roughly double the stock bar length. vitalBarLeft leaves room for the portrait.",
+    "vitalsX": 30,
+    "vitalsY": 30,
+    "vitalsWidth": 420,
+    "vitalsHeight": 96,
+    "vitalBarLeft": 96,
+    "vitalBarTop": 24,
+    "vitalBarWidth": 300,
+    "vitalBarHeight": 22,
+    "vitalBarGap": 4,
+    "hideVitalsBackground": true,
+    "hideVitalsAnimations": false
+  }
+}
