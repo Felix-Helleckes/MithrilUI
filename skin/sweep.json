@@ -25,10 +25,29 @@
   "$excludeComment": [
     "Pictograms and state colours. Flattening these would destroy information:",
     "you would lose quest difficulty, item rarity, class resource pips and",
-    "every icon in the game."
+    "every icon in the game.",
+    "",
+    "The toolbar families below matter more than they look. In LOTRO a button",
+    "like bag1_normal IS its own picture -- there is no separate icon drawn",
+    "on top of a frame. Clearing it does not strip ornament, it deletes the",
+    "button. That is what made the bag, journal and map buttons vanish."
   ],
   "exclude": [
     "icon",
+    "^bag\\d",
+    "^bag_",
+    "^inventory_",
+    "^journal_",
+    "^quest_(normal|pressed|rollover)",
+    "^accomplishment_journal",
+    "^fellowship_",
+    "^crafting_",
+    "^main_menu",
+    "^mission",
+    "^webstore",
+    "^store_",
+    "^shop_",
+    "^help_",
     "coloredBoxes",
     "_con_",
     "^alert",
@@ -110,6 +129,18 @@
       "color": "panel",
       "opacity": 0.72,
       "debugColor": "#ff00ff"
+    },
+    {
+      "$note": [
+        "Clickable surfaces need to stay visible. A transparent button is an",
+        "invisible button, which is worse than an ornate one. These get a",
+        "translucent plate: clearly a control, never a black slab."
+      ],
+      "match": "(button|_btn|slot|^tab_|_tab_|_tab$)",
+      "role": "sweepControl",
+      "color": "panelAlt",
+      "opacity": 0.55,
+      "debugColor": "#0088ff"
     },
     {
       "$note": "Rules and separators stay visible as a hairline",

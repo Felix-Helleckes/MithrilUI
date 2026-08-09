@@ -189,8 +189,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(f"\nInstalled {actions} item(s).")
-    print("Skins:   restart the client, then Options (Ctrl+O) -> UI Settings -> Current User Skin.")
-    print("Plugins: in game, /plugins refresh   then   /plugins load MithrilUI")
+    if do_skins:
+        print("Skins:   restart the client, then "
+              "Options (Ctrl+O) -> UI Settings -> Misc -> Current User Skin.")
+    if do_plugins:
+        print("Plugins: in game, /plugins refresh   then   /plugins load MithrilUI")
     return 0
 
 
