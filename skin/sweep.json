@@ -50,6 +50,7 @@
     "^webstore",
     "^store_",
     "^shop_",
+    "webstore",
     "^help_",
     "coloredBoxes",
     "_con_",
@@ -123,15 +124,15 @@
         "page arrows and SwitchCenter_sword/shield is the stance indicator.",
         "Those carry information and must survive."
       ],
-      "match": "^letterbox_bottom(_mc|_glass_overlay|_(left|right)(_mid)?_cap)?$",
-      "role": "sweepClear",
+      "match": "^letterbox_bottom(_mc|_(left|right)(_mid)?_cap)?$",
+      "role": "sweepBar",
       "color": "panel",
-      "opacity": 0.0,
-      "debugColor": "#ff0000"
+      "opacity": 0.88,
+      "debugColor": "#00ffff"
     },
     {
-      "$note": "The store button plate, which renders as a dark slab otherwise.",
-      "match": "^toolbar_webstore_button_",
+      "$note": "The glass sheen over the bar is pure shine, so that one goes.",
+      "match": "^letterbox_bottom_glass_overlay$",
       "role": "sweepClear",
       "color": "panel",
       "opacity": 0.0,
