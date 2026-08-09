@@ -42,18 +42,31 @@ Doing it by hand is fine too — copy `dist/skins/MithrilUI` into
 ## 3. Turn it on
 
 **Skin** — restart the client first; skins are only read at startup.
-Then **Options (Ctrl+O) → UI Settings → Current User Skin → MithrilUI Dark → Accept**.
+Then **Options (Ctrl+O) → UI Settings**, scroll to **Misc** at the bottom of that
+page, pick **MithrilUI Dark** in the *Current User Skin* dropdown, **Accept**.
 
-**Plugins** — no restart needed. In game:
+If the skin is not in the dropdown, its XML failed to parse — the client says
+nothing. Run `python tools/validate.py dist/skins/MithrilUI`.
+
+**Plugins** — no restart needed. The convenient route is the Plugin Manager on
+the **character selection screen**: open *Manage Plugins*, select a plugin, and
+set **automatically load for** to a character or to all characters. Then it
+loads itself on every login and you never think about it again.
+
+The manual route, in game:
 
 ```
 /plugins refresh
+/plugins list
 /plugins load MithrilUI
 ```
 
-Then load whichever displays you want from the Plugin Manager: *MithrilUI
-Databar*, *MithrilUI Vitals*, *MithrilUI BuffBars*. Load `MithrilUI` itself
-first — it owns the `/mithril` command and the shared window lock.
+Load `MithrilUI` first — it owns the `/mithril` command and the shared window
+lock. Then *MithrilUI Vitals*, *MithrilUI Databar*, *MithrilUI BuffBars* as you
+want them. `/plugins manager` opens the manager in game.
+
+Note that `/plugins unload` unloads **everything**, not one plugin. To drop a
+single module, untick it in the Plugin Manager.
 
 ## 4. Arrange it
 

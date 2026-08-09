@@ -57,8 +57,14 @@ python tools/build.py
 python tools/install.py
 ```
 
-Restart the client, then **Options (Ctrl+O) → UI Settings → Current User Skin →
-MithrilUI Dark**. For plugins: `/plugins refresh` then `/plugins load MithrilUI`.
+Restart the client, then **Options (Ctrl+O) → UI Settings → Misc → Current User
+Skin → MithrilUI Dark**. For plugins, use *Manage Plugins* on the character
+selection screen and set *automatically load for*, or `/plugins refresh` then
+`/plugins load MithrilUI` in game.
+
+Prefer not to build? Grab the archives from
+[Releases](https://github.com/Felix-Helleckes/MithrilUI/releases) — they unzip
+straight into `ui\skins\` and `Plugins\`.
 
 Full walkthrough and troubleshooting in [docs/INSTALL.md](docs/INSTALL.md).
 
@@ -100,6 +106,7 @@ one JSON file that drives the skin art *and* the plugin colours.
 | `tools/extract_ids.py` | Mines panel/element IDs out of any installed skin — the only practical way to find them |
 | `tools/install.py` | Copies or symlinks into the LOTRO folder; `--uninstall`, `--dry-run` |
 | `tools/gen_lua.py` | Emits the shared palette as Lua so skin and plugins cannot drift apart |
+| `tools/package.py` | Release zips in the single-root-folder shape lotrointerface.com requires |
 
 ```bash
 python tools/build.py --profile declutter --resolution 2560x1440

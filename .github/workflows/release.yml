@@ -1,0 +1,81 @@
+name: release
+
+# Push a tag, get a GitHub Release with archives shaped the way
+# lotrointerface.com wants them (one root folder, no path prefix).
+#
+#   git tag v0.1.0 && git push origin v0.1.0
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to package (e.g. 0.1.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "value=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build all skins
+        run: python tools/build.py --all
+
+      - name: Verify before shipping
+        run: |
+          pip install lupa
+          python tools/validate.py
+          python tools/check_plugins.py
+
+      - name: Package
+        run: python tools/package.py --version "${{ steps.version.outputs.value }}"
+
+      - name: Preview image for the release notes
+        run: python tools/preview.py dist/skins/MithrilUI --out dist/release/preview.png
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: MithrilUI ${{ steps.version.outputs.value }}
+          generate_release_notes: true
+          files: |
+            dist/release/*.zip
+            dist/release/preview.png
+          body: |
+            ## Install
+
+            **Skin** — unzip into `Documents\The Lord of the Rings Online\ui\skins\`,
+            restart the client, then Options (Ctrl+O) → UI Settings → scroll to
+            **Misc** at the bottom → **Current User Skin**.
+
+            **Plugins** — unzip into `Documents\The Lord of the Rings Online\Plugins\`.
+            On the character selection screen open **Manage Plugins** and set
+            *automatically load for* on the ones you want, or in game run
+            `/plugins refresh` then `/plugins load MithrilUI`.
+
+            Full guide: [docs/INSTALL.md](https://github.com/Felix-Helleckes/MithrilUI/blob/main/docs/INSTALL.md)
+            · Safety notes: [docs/SAFETY.md](https://github.com/Felix-Helleckes/MithrilUI/blob/main/docs/SAFETY.md)
+
+            ### Which skin archive?
+
+            | Archive | What it is |
+            |---|---|
+            | `Skin-Dark` | The default: cool silver-blue, art only, safe everywhere |
+            | `Skin-Ash` | Same geometry, warm grey and bronze palette |
+            | `*-Declutter` | Also removes the store button and XP-bar gloss, and pins the toolbar bottom-centre. **Built for 1920x1080** — for another resolution, rebuild with `python tools/build.py --profile declutter --resolution WxH` |
