@@ -180,15 +180,19 @@ def write_skin_definition(
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # Match the conventions of skins that are known to load, rather than
+    # relying on the client's XML parser being as forgiving as Python's:
+    # the header comment goes inside <opt>, Mapping uses an explicit closing
+    # tag rather than self-closing, and paths carry a leading ".\".
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
+        "<opt>",
         "<!--",
         f"  {escape(header_note)}" if header_note else "  MithrilUI",
         "",
         "  GENERATED FILE - do not edit by hand.",
         "  Rebuild with: python tools/build.py",
         "-->",
-        "<opt>",
         f"<SkinName Name={quoteattr(skin_name)}></SkinName>",
         "",
     ]
@@ -202,9 +206,12 @@ def write_skin_definition(
         for module in sorted(by_module):
             lines.append(f"<!-- {module} -->")
             for record in sorted(by_module[module], key=lambda r: r["id"]):
+                path = record["file"]
+                if not path.startswith(".\\"):
+                    path = ".\\" + path.lstrip("\\")
                 lines.append(
                     f'<Mapping ArtAssetID={quoteattr(record["id"])} '
-                    f'FileName={quoteattr(record["file"])} />'
+                    f'FileName={quoteattr(path)}></Mapping>'
                 )
             lines.append("")
 

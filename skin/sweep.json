@@ -62,80 +62,68 @@
   ],
 
   "$rulesComment": [
-    "Ordered. State suffixes are matched before the generic 'button' rule so",
-    "that button_foo_pressed becomes the pressed colour rather than the normal",
-    "one. `color` and `opacity` are theme role names."
+    "Ordered, first match wins. `color` and `opacity` are theme roles; an",
+    "opacity of 0 produces a fully transparent file.",
+    "",
+    "THE GOVERNING RULE: removing ornament means making it INVISIBLE, not",
+    "painting a dark rectangle over it. An opaque fill on an unknown asset",
+    "covers whatever the client draws underneath, which is how you end up with",
+    "black blocks over portraits and action bar buttons.",
+    "",
+    "So only assets we can positively identify as a background get a fill.",
+    "Everything else becomes transparent: worst case something decorative",
+    "disappears, which is the goal, and nothing can ever obscure content."
   ],
   "rules": [
     {
-      "$note": "Pressed / held states",
-      "match": "(_pressed|_press|_depressed|_down)$",
-      "role": "sweepButtonDown",
-      "color": "buttonDown",
-      "opacity": "button"
-    },
-    {
-      "$note": "Hover states",
+      "$note": "Hover feedback. Kept, because losing it makes the UI feel dead.",
       "match": "(_rollover|_mouseover|_hover|_highlighted)$",
-      "role": "sweepButtonHover",
-      "color": "buttonHover",
-      "opacity": "button"
+      "role": "sweepHover",
+      "color": "accent",
+      "opacity": 0.18
     },
     {
-      "$note": "Disabled / unavailable states",
-      "match": "(_ghosted|_disabled|_inactive|_off)$",
-      "role": "sweepButtonDisabled",
-      "color": "buttonDisabled",
-      "opacity": "button"
+      "$note": "Pressed feedback, a touch darker than hover",
+      "match": "(_pressed|_press|_depressed)$",
+      "role": "sweepPressed",
+      "color": "shadow",
+      "opacity": 0.28
     },
     {
       "$note": "Selection and highlight washes",
-      "match": "(highlight|selected|selection|_active|_on$)",
+      "match": "(highlight|selected|selection|_active$|_on$)",
       "role": "sweepSelection",
       "color": "accent",
       "opacity": "selection"
     },
     {
-      "$note": "Buttons in their resting state",
-      "match": "button",
-      "role": "sweepButton",
-      "color": "button",
-      "opacity": "button"
-    },
-    {
-      "$note": "Backgrounds and backdrops. The ornate vitals frames live here.",
-      "match": "(backdrop|background|_bg$|_bg_|_BG$|_BG_)",
+      "$note": [
+        "Actual backgrounds. This is the only group that gets an opaque-ish",
+        "fill, and it is what replaces the carved stone behind the vitals,",
+        "the character panel and the journals."
+      ],
+      "match": "(backdrop|background|_bg$|_bg_|^bg_|_BG$|_BG_)",
       "role": "sweepPanel",
       "color": "panel",
-      "opacity": "panel"
+      "opacity": 0.72
     },
     {
-      "$note": "Tabs sit slightly lighter than the panel they belong to",
-      "match": "tab",
-      "role": "sweepPanelAlt",
-      "color": "panelAlt",
-      "opacity": "panel"
-    },
-    {
-      "$note": "Rules and separators",
+      "$note": "Rules and separators stay visible as a hairline",
       "match": "(divider|separator|_line$|_rule$)",
       "role": "sweepBorder",
       "color": "border",
       "opacity": 1.0
     },
     {
-      "$note": "Everything structural: boxes, frames, panels, fields, windows",
-      "match": "(box|panel|frame|field|window|border|backing|plate|scroll|list|entry|header|footer|title|bar$|_bar_|meter|vitals|banner|corner|edge|middle|_mid_|_top$|_bottom$|_left$|_right$|center)",
-      "role": "sweepPanel",
-      "color": "panel",
-      "opacity": "panel"
-    },
-    {
-      "$note": "Catch-all. Set sweepCatchAll false in a profile to skip this.",
+      "$note": [
+        "Everything else: frames, corners, end caps, filigree, plates, the",
+        "ornate chrome around every panel. This is the bulk of what makes",
+        "LOTRO's UI look busy, and all of it simply goes away."
+      ],
       "match": ".",
-      "role": "sweepPanel",
+      "role": "sweepClear",
       "color": "panel",
-      "opacity": "panel",
+      "opacity": 0.0,
       "catchAll": true
     }
   ]

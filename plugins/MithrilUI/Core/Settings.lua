@@ -63,14 +63,57 @@ function Settings.MarkDirty()
     dirty = true;
 end
 
+--[[ Turbine.PluginData writes the table out as Lua source and reads it back
+     with a strict parser. Anything it cannot represent produces a file that
+     fails to load on the next session, and the only symptom is a syntax error
+     naming a line number in a file you never wrote.
+
+     So the table is rebuilt from scratch before saving, keeping only string
+     keys and plain scalar values. Numeric keys, nils, functions and anything
+     exotic are dropped rather than risking an unreadable save. ]]
+local function sanitize(value, depth)
+    depth = depth or 0;
+    if (depth > 8) then return nil; end
+
+    local kind = type(value);
+    if (kind == "string" or kind == "boolean") then
+        return value;
+    end
+    if (kind == "number") then
+        -- Inf and NaN both serialise to something the reader rejects.
+        if (value ~= value or value == math.huge or value == -math.huge) then
+            return nil;
+        end
+        return value;
+    end
+    if (kind ~= "table") then
+        return nil;
+    end
+
+    local out = {};
+    local count = 0;
+    for key, item in pairs(value) do
+        if (type(key) == "string" and string.find(key, "^[%a_][%w_]*$") ~= nil) then
+            local cleaned = sanitize(item, depth + 1);
+            if (cleaned ~= nil) then
+                out[key] = cleaned;
+                count = count + 1;
+            end
+        end
+    end
+    if (count == 0) then return nil; end
+    return out;
+end
+
 --[[ Write to disk. Call on unload and after deliberate changes, not on every
      drag event -- saving is not free. ]]
 function Settings.Save(force)
     if (data == nil) then return false; end
     if (not dirty and not force) then return false; end
 
+    local payload = sanitize(data) or {};
     local ok, err = pcall(function()
-        Turbine.PluginData.Save(scope(), STORAGE_KEY, data);
+        Turbine.PluginData.Save(scope(), STORAGE_KEY, payload);
     end);
 
     if (ok) then
