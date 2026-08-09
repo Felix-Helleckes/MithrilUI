@@ -1,0 +1,33 @@
+{
+  "id": "debug",
+  "name": "MithrilUI Debug",
+  "$comment": [
+    "A diagnostic skin, not something to play with.",
+    "",
+    "Every asset the sweep touches becomes a solid, garish colour keyed to the",
+    "rule that matched it. Select it in game and the answer to 'is that thing",
+    "my skin's fault?' becomes visual: if an element lights up, this skin",
+    "controls it and can be changed. If it looks exactly as it always did, the",
+    "client draws it and no skin can reach it.",
+    "",
+    "Colour key:",
+    "  magenta  background / backdrop rule",
+    "  red      catch-all: ornament that normally becomes transparent",
+    "  cyan     selection and highlight",
+    "  green    hover state",
+    "  orange   pressed state",
+    "  yellow   divider / separator",
+    "",
+    "Build with:  python tools/build.py --profile debug",
+    "Then pick 'MithrilUI Debug' in Options, look at the thing you are",
+    "wondering about, and switch back."
+  ],
+  "theme": "mithril-dark",
+  "resolution": [1920, 1080],
+  "artModules": ["sweep"],
+  "layoutModules": [],
+  "options": {
+    "sweepDebug": true,
+    "sweepCatchAll": true
+  }
+}

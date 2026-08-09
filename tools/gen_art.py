@@ -300,6 +300,7 @@ def generate_sweep(
     explicit_ids: set[str],
     rle: bool = False,
     catch_all: bool = True,
+    debug: bool = False,
     verbose: bool = False,
 ) -> tuple[list[dict], dict[str, int]]:
     """Flatten every ArtAssetID the hand-written manifest does not cover.
@@ -356,10 +357,17 @@ def generate_sweep(
         role = matched["role"]
         if role not in shared:
             canvas = Canvas(size[0], size[1])
-            canvas.fill_rect(
-                0, 0, size[0], size[1],
-                theme.color(matched["color"], opacity=matched.get("opacity")),
-            )
+            if debug:
+                # Diagnostic mode: paint every swept asset a solid, garish
+                # colour keyed to the rule that matched it. Anything that
+                # lights up in game is something this skin controls; anything
+                # that stays as it was is drawn by the client and cannot be
+                # reached from a skin at all. Answers "did I cause that?" in
+                # one relog instead of a guessing session.
+                fill = theme.color(matched.get("debugColor", "#ff00ff"), opacity=1.0)
+            else:
+                fill = theme.color(matched["color"], opacity=matched.get("opacity"))
+            canvas.fill_rect(0, 0, size[0], size[1], fill)
             relative = Path("art") / "sweep" / f"{role}.tga"
             canvas.save(out_dir / relative, rle=rle)
             shared[role] = relative.as_posix().replace("/", "\\")

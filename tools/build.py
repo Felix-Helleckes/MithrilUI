@@ -167,6 +167,7 @@ def build_one(
             explicit_ids=explicit_ids,
             rle=rle,
             catch_all=profile.get("options", {}).get("sweepCatchAll", True),
+            debug=profile.get("options", {}).get("sweepDebug", False),
             verbose=verbose,
         )
         art_records = art_records + sweep_records
