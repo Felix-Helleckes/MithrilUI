@@ -124,11 +124,25 @@
         "page arrows and SwitchCenter_sword/shield is the stance indicator.",
         "Those carry information and must survive."
       ],
-      "match": "^letterbox_bottom(_mc|_(left|right)(_mid)?_cap)?$",
+      "match": "^letterbox_bottom(_mc|_(left|right)_cap)?$",
       "role": "sweepBar",
       "color": "panel",
       "opacity": 0.88,
+      "fillFraction": 0.55,
       "debugColor": "#00ffff"
+    },
+    {
+      "$note": [
+        "The mid caps belong to the XP bar, not the toolbar plate. Filling",
+        "them dark put blocks on either end of the level meter, so they are",
+        "left to the client."
+      ],
+      "match": "^letterbox_bottom_(left|right)_mid_cap$",
+      "role": "sweepSkip",
+      "color": "panel",
+      "opacity": 0.0,
+      "skip": true,
+      "debugColor": "#888888"
     },
     {
       "$note": "The glass sheen over the bar is pure shine, so that one goes.",

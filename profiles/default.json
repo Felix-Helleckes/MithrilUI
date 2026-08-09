@@ -2,15 +2,26 @@
   "id": "default",
   "name": "MithrilUI",
   "$comment": [
-    "The safe default: art only, no layout overrides.",
-    "Replacing art cannot break anything -- worst case a panel looks wrong and",
-    "you switch skins back. Layout modules move real UI elements and depend on",
-    "your screen resolution, so they are opt-in (see declutter.json).",
+    "The one skin. There used to be Dark / Full / Tuned variants; they are",
+    "folded in here, because three entries in a dropdown to pick between",
+    "shades of the same idea is not a feature.",
     "",
-    "Build with:  python tools/build.py --profile default"
+    "Build for your own resolution, or the toolbar lands in the wrong place:",
+    "  python tools/build.py --resolution auto",
+    "",
+    "TWO THINGS THIS COSTS YOU, both inherent to skinning rather than choices:",
+    "",
+    "1. sweepCatchAll clears the ~409 assets no named rule recognises. That is",
+    "   what removes the gold minimap rim and the last of the filigree. It is",
+    "   also unverifiable: if something you wanted disappears, it came from",
+    "   here, and the fix is to give that asset its own exclusion.",
+    "",
+    "2. toolbar-align writes explicit positions, so the game's own layout tool",
+    "   (Ctrl+backslash) can no longer move the toolbar. There is no way to",
+    "   straighten elements without fixing them in place."
   ],
   "theme": "mithril-dark",
-  "resolution": [1920, 1080],
+  "resolution": [2560, 1440],
   "artModules": [
     "panels",
     "titlebar",
@@ -22,25 +33,23 @@
     "misc",
     "sweep"
   ],
-  "layoutModules": [],
+  "layoutModules": ["toolbar-align"],
   "options": {
-    "$sweepCatchAll": [
-      "OFF, and this is the most important setting in the project.",
-      "",
-      "The catch-all clears every asset no named rule recognised. It is where",
-      "the minimal look comes from, and it is also where every regression came",
-      "from: black blocks over the portrait, invisible toolbar buttons, a",
-      "broken loading progress bar. Each was a different unknown asset, found",
-      "only by someone hitting it in game.",
-      "",
-      "About 450 assets cannot be identified from their name alone, and an",
-      "unverifiable rule that silently deletes interface elements is not worth",
-      "the ornament it removes. With it off, only assets a named rule actually",
-      "recognises get touched -- still around 1450 of them.",
-      "",
-      "Turn it on with the `full` profile if you want maximum flatness and are",
-      "willing to report what breaks."
-    ],
-    "sweepCatchAll": false
+    "sweepCatchAll": true,
+
+    "$toolbar": "Widths are generous: too wide only adds empty space, too narrow clips buttons.",
+    "toolbarWidth": 1100,
+    "toolbarHeight": 64,
+    "mainBarWidth": 560,
+    "leftEdge": 8,
+    "rightEdge": 1092,
+    "sideButtonSize": 32,
+    "sideButtonGap": 2,
+    "sideButtonY": 20,
+    "sideButtonsStacked": false,
+
+    "hideWebstoreButton": false,
+    "hideLevelMeterGlass": true,
+    "hideLevelMeterCaps": true
   }
 }

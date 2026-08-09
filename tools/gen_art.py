@@ -373,6 +373,12 @@ def generate_sweep(
             stats["unmatched"] += 1
             continue
 
+        # A rule may exist purely to claim an ID before a broader rule below
+        # can, and then leave it to the client.
+        if matched.get("skip"):
+            stats["excluded"] += 1
+            continue
+
         if matched.get("catchAll"):
             stats["catchAll"] += 1
 
@@ -408,7 +414,16 @@ def generate_sweep(
                 fill = theme.color(matched.get("debugColor", "#ff00ff"), opacity=1.0)
             else:
                 fill = theme.color(matched["color"], opacity=matched.get("opacity"))
-            canvas.fill_rect(0, 0, size[0], size[1], fill)
+            # fillFraction paints only the bottom slice and leaves the rest
+            # transparent. The client stretches the asset to whatever rect the
+            # element occupies, so this is how a bar is made to *look* shorter
+            # without writing a position and losing Ctrl+\ movability.
+            fraction = float(matched.get("fillFraction", 1.0))
+            if fraction >= 1.0:
+                canvas.fill_rect(0, 0, size[0], size[1], fill)
+            else:
+                painted = max(1, int(round(size[1] * fraction)))
+                canvas.fill_rect(0, size[1] - painted, size[0], painted, fill)
             relative = Path("art") / "sweep" / f"{role}.tga"
             canvas.save(out_dir / relative, rle=rle)
             shared[role] = relative.as_posix().replace("/", "\\")
