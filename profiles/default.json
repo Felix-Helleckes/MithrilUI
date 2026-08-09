@@ -1,0 +1,26 @@
+{
+  "id": "default",
+  "name": "MithrilUI",
+  "$comment": [
+    "The safe default: art only, no layout overrides.",
+    "Replacing art cannot break anything -- worst case a panel looks wrong and",
+    "you switch skins back. Layout modules move real UI elements and depend on",
+    "your screen resolution, so they are opt-in (see declutter.json).",
+    "",
+    "Build with:  python tools/build.py --profile default"
+  ],
+  "theme": "mithril-dark",
+  "resolution": [1920, 1080],
+  "artModules": [
+    "panels",
+    "titlebar",
+    "buttons",
+    "chat",
+    "tabs",
+    "selection",
+    "combat",
+    "misc"
+  ],
+  "layoutModules": [],
+  "options": {}
+}

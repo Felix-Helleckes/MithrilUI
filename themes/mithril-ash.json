@@ -1,0 +1,43 @@
+{
+  "id": "mithril-ash",
+  "name": "MithrilUI Ash",
+  "description": "Neutral warm-grey variant with a muted bronze accent. Same geometry as Dark, different palette -- proof that a whole retheme is one file.",
+  "colors": {
+    "panel": "#15130f",
+    "panelAlt": "#1d1a15",
+    "header": "#100e0b",
+    "border": "#38322a",
+    "borderBright": "#4d453a",
+    "accent": "#c9a227",
+    "accentDim": "#8a6f1c",
+    "text": "#e4ded2",
+    "textDim": "#9b9284",
+    "button": "#221f19",
+    "buttonHover": "#2d2921",
+    "buttonDown": "#0f0d0a",
+    "buttonDisabled": "#191712",
+    "selection": "#c9a227",
+    "shadow": "#000000",
+    "good": "#a8c927",
+    "bad": "#c96027"
+  },
+  "opacity": {
+    "panel": 0.90,
+    "header": 0.95,
+    "button": 0.95,
+    "chat": 0.55,
+    "selection": 0.28,
+    "selectionHot": 0.48,
+    "overlay": 0.60
+  },
+  "geometry": {
+    "borderWidth": 1,
+    "headerAccentWidth": 1
+  },
+  "texture": {
+    "enabled": true,
+    "step": 3,
+    "color": "#ffffff",
+    "opacity": 0.02
+  }
+}

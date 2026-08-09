@@ -1,0 +1,13 @@
+# Normalise line endings in the repo; check out native. LOTRO reads either.
+* text=auto
+
+*.lua    text
+*.py     text
+*.xml    text
+*.json   text
+*.md     text
+*.plugin text
+
+*.tga binary
+*.png binary
+*.jpg binary

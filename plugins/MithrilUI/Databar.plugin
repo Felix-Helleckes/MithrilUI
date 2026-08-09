@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Plugin>
+  <Information>
+    <Name>MithrilUI Databar</Name>
+    <Author>Felix-Helleckes</Author>
+    <Version>0.1.0</Version>
+    <Description>A thin strip of the numbers you glance at: coordinates, free bag slots, morale and power percentage, session time. Segments the client cannot provide hide themselves.</Description>
+  </Information>
+  <Package>MithrilUI.Databar.Main</Package>
+</Plugin>

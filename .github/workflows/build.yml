@@ -1,0 +1,47 @@
+name: build
+
+# The whole skin is generated, so CI can prove the repo is buildable from a
+# clean checkout: every asset renders, the XML parses, and the Lua compiles.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build every theme and profile
+        run: python tools/build.py --all
+
+      - name: Validate the generated skins
+        run: python tools/validate.py
+
+      # lupa gives check_plugins.py a real Lua 5.1 parser instead of the
+      # keyword heuristic it falls back to.
+      - name: Install a Lua parser
+        run: pip install lupa
+
+      - name: Check the plugin suite
+        run: python tools/check_plugins.py
+
+      - name: Render previews
+        run: |
+          python tools/preview.py dist/skins/MithrilUI --out preview-dark.png
+          python tools/preview.py dist/skins/MithrilUI --sheet --out preview-sheet.png
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mithrilui-skins
+          path: |
+            dist/skins/
+            preview-dark.png
+            preview-sheet.png
+          retention-days: 14

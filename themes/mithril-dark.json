@@ -1,0 +1,43 @@
+{
+  "id": "mithril-dark",
+  "name": "MithrilUI Dark",
+  "description": "The default MithrilUI look: near-black panels, one hairline border, one cool silver-blue accent. No wood, no gold filigree, no parchment.",
+  "colors": {
+    "panel": "#0e1116",
+    "panelAlt": "#141922",
+    "header": "#0a0d12",
+    "border": "#2a323f",
+    "borderBright": "#3d4757",
+    "accent": "#7fb2d9",
+    "accentDim": "#4a6f8c",
+    "text": "#d7dee8",
+    "textDim": "#8d97a6",
+    "button": "#1a2029",
+    "buttonHover": "#232c38",
+    "buttonDown": "#0b0e13",
+    "buttonDisabled": "#12161c",
+    "selection": "#7fb2d9",
+    "shadow": "#000000",
+    "good": "#7fd9a2",
+    "bad": "#d9807f"
+  },
+  "opacity": {
+    "panel": 0.90,
+    "header": 0.95,
+    "button": 0.95,
+    "chat": 0.55,
+    "selection": 0.30,
+    "selectionHot": 0.50,
+    "overlay": 0.60
+  },
+  "geometry": {
+    "borderWidth": 1,
+    "headerAccentWidth": 1
+  },
+  "texture": {
+    "enabled": true,
+    "step": 3,
+    "color": "#ffffff",
+    "opacity": 0.02
+  }
+}

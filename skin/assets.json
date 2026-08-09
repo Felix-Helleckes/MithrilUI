@@ -1,0 +1,216 @@
+{
+  "$comment": [
+    "Every entry maps a LOTRO ArtAssetID to a procedural recipe.",
+    "Sizes come from the official ArtAssetID dictionary at",
+    "https://www.lotrointerface.com/index.php?p=ui_skinning_2 -- the game expects",
+    "these exact dimensions, so do not change them without a reason.",
+    "`module` groups assets so a profile can switch whole areas on or off.",
+    "Recipes are implemented in tools/gen_art.py."
+  ],
+  "assets": [
+    {
+      "$group": "9-slice window frame -- the border every default panel draws",
+      "module": "panels"
+    },
+    { "id": "basepanel_topleft", "size": [19, 19], "recipe": "nine_corner", "params": { "corner": "tl" }, "module": "panels" },
+    { "id": "basepanel_topright", "size": [19, 19], "recipe": "nine_corner", "params": { "corner": "tr" }, "module": "panels" },
+    { "id": "basepanel_bottomleft", "size": [19, 19], "recipe": "nine_corner", "params": { "corner": "bl" }, "module": "panels" },
+    { "id": "basepanel_bottomright", "size": [19, 19], "recipe": "nine_corner", "params": { "corner": "br" }, "module": "panels" },
+    { "id": "basepanel_topmid", "size": [2, 3], "recipe": "nine_edge", "params": { "edge": "t" }, "module": "panels" },
+    { "id": "basepanel_bottommid", "size": [2, 3], "recipe": "nine_edge", "params": { "edge": "b" }, "module": "panels" },
+    { "id": "basepanel_midleft", "size": [3, 2], "recipe": "nine_edge", "params": { "edge": "l" }, "module": "panels" },
+    { "id": "basepanel_midright", "size": [3, 2], "recipe": "nine_edge", "params": { "edge": "r" }, "module": "panels" },
+
+    {
+      "$group": "Large window bodies. These are what replace the parchment and wood.",
+      "module": "panels"
+    },
+    { "id": "base_box_center", "size": [1024, 1024], "recipe": "solid", "params": { "color": "panel", "opacity": "panel", "texture": true }, "module": "panels" },
+    { "id": "base_box_center_silver", "size": [1024, 1024], "recipe": "solid", "params": { "color": "panelAlt", "opacity": "panel", "texture": true }, "module": "panels" },
+    { "id": "panel_border", "size": [256, 256], "recipe": "panel", "params": { "color": "panel", "opacity": "panel", "edges": "tlbr" }, "module": "panels" },
+    { "id": "black_translucent", "size": [128, 128], "recipe": "solid", "params": { "color": "shadow", "opacity": "overlay" }, "module": "panels" },
+    { "id": "options_panel_divider", "size": [400, 30], "recipe": "divider", "params": {}, "module": "panels" },
+    { "id": "money_player_all_background", "size": [265, 28], "recipe": "panel", "params": { "color": "panelAlt", "opacity": "panel", "edges": "tlbr" }, "module": "panels" },
+    { "id": "selection_inanimate_backdrop", "size": [229, 65], "recipe": "panel", "params": { "color": "panel", "opacity": "panel", "edges": "tlbr" }, "module": "panels" },
+    { "id": "pedigree_bg", "size": [392, 247], "recipe": "solid", "params": { "color": "panel", "opacity": "panel", "texture": true }, "module": "panels" },
+
+    {
+      "$group": "Silver box frame -- the ornate secondary window style",
+      "module": "panels"
+    },
+    { "id": "box_silver_upper", "size": [434, 37], "recipe": "nine_edge", "params": { "edge": "t" }, "module": "panels" },
+    { "id": "box_silver_bottom", "size": [103, 36], "recipe": "nine_edge", "params": { "edge": "b" }, "module": "panels" },
+    { "id": "box_silver_side_left", "size": [36, 105], "recipe": "nine_edge", "params": { "edge": "l" }, "module": "panels" },
+    { "id": "box_silver_side_right", "size": [36, 237], "recipe": "nine_edge", "params": { "edge": "r" }, "module": "panels" },
+    { "id": "box_silver_upper_left", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "tl" }, "module": "panels" },
+    { "id": "box_silver_upper_right", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "tr" }, "module": "panels" },
+    { "id": "box_silver_bottom_left", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "bl" }, "module": "panels" },
+    { "id": "box_silver_lower_right", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "br" }, "module": "panels" },
+    { "id": "box_silver_upper_left_noadorn", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "tl" }, "module": "panels" },
+    { "id": "box_silver_upper_right_noadorn", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "tr" }, "module": "panels" },
+    { "id": "box_silver_bottom_left_noadorn", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "bl" }, "module": "panels" },
+    { "id": "box_silver_lower_right_noadorn", "size": [36, 36], "recipe": "nine_corner", "params": { "corner": "br" }, "module": "panels" },
+
+    {
+      "$group": "Title bars",
+      "module": "titlebar"
+    },
+    { "id": "base_box_titlebar_top", "size": [139, 42], "recipe": "header", "params": {}, "module": "titlebar" },
+    { "id": "base_box_titlebar_left", "size": [35, 42], "recipe": "header", "params": { "edges": "l" }, "module": "titlebar" },
+    { "id": "base_box_titlebar_right", "size": [35, 42], "recipe": "header", "params": { "edges": "r" }, "module": "titlebar" },
+    { "id": "box_01_titlebar", "size": [512, 20], "recipe": "header", "params": {}, "module": "titlebar" },
+    { "id": "titlebar_X_2", "size": [16, 16], "recipe": "close_button", "params": { "state": "normal" }, "module": "titlebar" },
+    { "id": "titlebar_X_2_mouseover", "size": [16, 16], "recipe": "close_button", "params": { "state": "hover" }, "module": "titlebar" },
+    { "id": "titlebar_X_2_pressed", "size": [16, 16], "recipe": "close_button", "params": { "state": "down" }, "module": "titlebar" },
+
+    {
+      "$group": "Text buttons -- three-slice (left cap / stretchable middle / right cap)",
+      "module": "buttons"
+    },
+    { "id": "textbutton_left_normal", "size": [147, 20], "recipe": "button", "params": { "state": "normal", "edges": "tlb" }, "module": "buttons" },
+    { "id": "textbutton_left_mouseover", "size": [147, 20], "recipe": "button", "params": { "state": "hover", "edges": "tlb" }, "module": "buttons" },
+    { "id": "textbutton_left_pressed", "size": [147, 20], "recipe": "button", "params": { "state": "down", "edges": "tlb" }, "module": "buttons" },
+    { "id": "textbutton_left_ghosted", "size": [147, 20], "recipe": "button", "params": { "state": "disabled", "edges": "tlb" }, "module": "buttons" },
+    { "id": "textbutton_left_highlighted_normal", "size": [147, 20], "recipe": "button", "params": { "state": "normal", "edges": "tlb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_left_highlighted_mouseover", "size": [147, 20], "recipe": "button", "params": { "state": "hover", "edges": "tlb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_left_highlighted_pressed", "size": [147, 20], "recipe": "button", "params": { "state": "down", "edges": "tlb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_mid_normal", "size": [120, 20], "recipe": "button", "params": { "state": "normal", "edges": "tb" }, "module": "buttons" },
+    { "id": "textbutton_mid_mouseover", "size": [120, 20], "recipe": "button", "params": { "state": "hover", "edges": "tb" }, "module": "buttons" },
+    { "id": "textbutton_mid_pressed", "size": [120, 20], "recipe": "button", "params": { "state": "down", "edges": "tb" }, "module": "buttons" },
+    { "id": "textbutton_mid_ghosted", "size": [120, 20], "recipe": "button", "params": { "state": "disabled", "edges": "tb" }, "module": "buttons" },
+    { "id": "textbutton_mid_highlighted_normal", "size": [120, 20], "recipe": "button", "params": { "state": "normal", "edges": "tb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_mid_highlighted_mouseover", "size": [120, 20], "recipe": "button", "params": { "state": "hover", "edges": "tb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_mid_highlighted_pressed", "size": [120, 20], "recipe": "button", "params": { "state": "down", "edges": "tb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_right_normal", "size": [20, 20], "recipe": "button", "params": { "state": "normal", "edges": "trb" }, "module": "buttons" },
+    { "id": "textbutton_right_mouseover", "size": [20, 20], "recipe": "button", "params": { "state": "hover", "edges": "trb" }, "module": "buttons" },
+    { "id": "textbutton_right_pressed", "size": [20, 20], "recipe": "button", "params": { "state": "down", "edges": "trb" }, "module": "buttons" },
+    { "id": "textbutton_right_ghosted", "size": [20, 20], "recipe": "button", "params": { "state": "disabled", "edges": "trb" }, "module": "buttons" },
+    { "id": "textbutton_right_highlighted_normal", "size": [20, 20], "recipe": "button", "params": { "state": "normal", "edges": "trb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_right_highlighted_mouseover", "size": [20, 20], "recipe": "button", "params": { "state": "hover", "edges": "trb", "highlighted": true }, "module": "buttons" },
+    { "id": "textbutton_right_highlighted_pressed", "size": [20, 20], "recipe": "button", "params": { "state": "down", "edges": "trb", "highlighted": true }, "module": "buttons" },
+    { "id": "button_main_normal", "size": [51, 34], "recipe": "button", "params": { "state": "normal" }, "module": "buttons" },
+    { "id": "button_main_mouseover", "size": [51, 34], "recipe": "button", "params": { "state": "hover" }, "module": "buttons" },
+    { "id": "button_main_pressed", "size": [51, 34], "recipe": "button", "params": { "state": "down" }, "module": "buttons" },
+
+    {
+      "$group": "Instant-message / social buttons",
+      "module": "buttons"
+    },
+    { "id": "im_button_normal", "size": [100, 19], "recipe": "button", "params": { "state": "normal" }, "module": "buttons" },
+    { "id": "im_button_rollover", "size": [100, 19], "recipe": "button", "params": { "state": "hover" }, "module": "buttons" },
+    { "id": "im_button_pressed", "size": [100, 19], "recipe": "button", "params": { "state": "down" }, "module": "buttons" },
+    { "id": "im_button_ghosted", "size": [100, 19], "recipe": "button", "params": { "state": "disabled" }, "module": "buttons" },
+    { "id": "im_button_close_highlight_active", "size": [100, 19], "recipe": "button", "params": { "state": "hover", "highlighted": true }, "module": "buttons" },
+    { "id": "im_button_close_normal", "size": [14, 14], "recipe": "close_button", "params": { "state": "normal" }, "module": "buttons" },
+    { "id": "im_button_close_rollover", "size": [14, 14], "recipe": "close_button", "params": { "state": "hover" }, "module": "buttons" },
+    { "id": "im_button_close_pressed", "size": [14, 14], "recipe": "close_button", "params": { "state": "down" }, "module": "buttons" },
+    { "id": "im_chat_alert", "size": [14, 14], "recipe": "dot", "params": { "color": "accent" }, "module": "buttons" },
+
+    {
+      "$group": "Chat -- transparent background, flat tabs",
+      "module": "chat"
+    },
+    { "id": "chat_back", "size": [32, 32], "recipe": "solid", "params": { "color": "panel", "opacity": "chat" }, "module": "chat" },
+    { "id": "chat_entry_focussed", "size": [13, 20], "recipe": "panel", "params": { "color": "panelAlt", "opacity": "panel", "edges": "tlbr" }, "module": "chat" },
+    { "id": "chat_unread_overlay", "size": [16, 16], "recipe": "dot", "params": { "color": "accent" }, "module": "chat" },
+    { "id": "chat_tab_tier1_middle_front_w", "size": [204, 28], "recipe": "tab", "params": { "state": "front", "edges": "tl" }, "module": "chat" },
+    { "id": "chat_tab_tier1_middle_front_n", "size": [182, 28], "recipe": "tab", "params": { "state": "front", "edges": "t" }, "module": "chat" },
+    { "id": "chat_tab_tier1_middle_front_e", "size": [13, 28], "recipe": "tab", "params": { "state": "front", "edges": "tr" }, "module": "chat" },
+    { "id": "chat_tab_tier1_middle_back_w", "size": [204, 28], "recipe": "tab", "params": { "state": "back", "edges": "tl" }, "module": "chat" },
+    { "id": "chat_tab_tier1_middle_back_n", "size": [183, 28], "recipe": "tab", "params": { "state": "back", "edges": "t" }, "module": "chat" },
+    { "id": "chat_tab_tier1_middle_back_e", "size": [13, 28], "recipe": "tab", "params": { "state": "back", "edges": "tr" }, "module": "chat" },
+
+    {
+      "$group": "Generic panel tabs, normal and small",
+      "module": "tabs"
+    },
+    { "id": "tab_tier1_middle_front_w", "size": [204, 28], "recipe": "tab", "params": { "state": "front", "edges": "tl" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_front_n", "size": [182, 28], "recipe": "tab", "params": { "state": "front", "edges": "t" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_front_e", "size": [13, 28], "recipe": "tab", "params": { "state": "front", "edges": "tr" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_back_w", "size": [204, 28], "recipe": "tab", "params": { "state": "back", "edges": "tl" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_back_n", "size": [183, 28], "recipe": "tab", "params": { "state": "back", "edges": "t" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_back_e", "size": [13, 28], "recipe": "tab", "params": { "state": "back", "edges": "tr" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_front_w_sm", "size": [146, 20], "recipe": "tab", "params": { "state": "front", "edges": "tl" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_front_n_sm", "size": [130, 20], "recipe": "tab", "params": { "state": "front", "edges": "t" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_front_e_sm", "size": [13, 20], "recipe": "tab", "params": { "state": "front", "edges": "tr" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_back_w_sm", "size": [146, 20], "recipe": "tab", "params": { "state": "back", "edges": "tl" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_back_n_sm", "size": [131, 20], "recipe": "tab", "params": { "state": "back", "edges": "t" }, "module": "tabs" },
+    { "id": "tab_tier1_middle_back_e_sm", "size": [13, 20], "recipe": "tab", "params": { "state": "back", "edges": "tr" }, "module": "tabs" },
+
+    {
+      "$group": "List selection highlights. Accent wash plus a left accent bar so the",
+      "$group2": "selected row reads instantly without a heavy blue gradient.",
+      "module": "selection"
+    },
+    { "id": "blue_selection", "size": [384, 20], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_selection_bright", "size": [242, 36], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+    { "id": "blue_selection_accomplisment_updated", "size": [390, 20], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+    { "id": "blue_selection_quest_normal", "size": [242, 36], "recipe": "selection", "params": { "state": "idle" }, "module": "selection" },
+    { "id": "blue_selection_quest_highlight", "size": [242, 36], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_selection_quest_highlight_active", "size": [242, 36], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+    { "id": "blue_selection_skilltrainer_normal", "size": [366, 64], "recipe": "selection", "params": { "state": "idle" }, "module": "selection" },
+    { "id": "blue_selection_skilltrainer_highlight", "size": [366, 64], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_selection_skilltrainer_highlight_active", "size": [366, 64], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+    { "id": "blue_selection_skilltrainer_ghosted", "size": [366, 64], "recipe": "selection", "params": { "state": "disabled" }, "module": "selection" },
+    { "id": "blue_selection_title_highlight", "size": [366, 64], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_selection_selectable_reward_highlight", "size": [366, 64], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_selection_vendor_item_normal", "size": [183, 64], "recipe": "selection", "params": { "state": "idle" }, "module": "selection" },
+    { "id": "blue_selection_vendor_item_highlight_active", "size": [183, 64], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+    { "id": "blue_selection_vendor_item_repair", "size": [366, 64], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_selection_vendor_item_repair_normal", "size": [366, 64], "recipe": "selection", "params": { "state": "idle" }, "module": "selection" },
+    { "id": "green_selection_vendor_item_stacktoggleon", "size": [183, 64], "recipe": "selection", "params": { "state": "normal", "color": "good" }, "module": "selection" },
+    { "id": "blue_mail_select_normal", "size": [435, 45], "recipe": "selection", "params": { "state": "idle" }, "module": "selection" },
+    { "id": "blue_mail_select_highlight", "size": [425, 45], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_mail_select_highlight_active", "size": [435, 45], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+    { "id": "blue_mail_select_highlight_active_admin", "size": [435, 45], "recipe": "selection", "params": { "state": "hot", "color": "accentDim" }, "module": "selection" },
+    { "id": "blue_tracking_select_normal", "size": [225, 25], "recipe": "selection", "params": { "state": "idle" }, "module": "selection" },
+    { "id": "blue_tracking_select_highlight", "size": [225, 25], "recipe": "selection", "params": { "state": "normal" }, "module": "selection" },
+    { "id": "blue_tracking_select_highlight_active", "size": [225, 25], "recipe": "selection", "params": { "state": "hot" }, "module": "selection" },
+
+    {
+      "$group": "Social panel rows use their own 9-slice highlight",
+      "module": "selection"
+    },
+    { "id": "social_panel_list_elements_normal_top_left", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "tl", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_top_right", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "tr", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_bottom_left", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "bl", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_lower_right", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "br", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_top_center", "size": [44, 3], "recipe": "nine_edge", "params": { "edge": "t", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_bottom_center", "size": [44, 3], "recipe": "nine_edge", "params": { "edge": "b", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_middle_left", "size": [3, 44], "recipe": "nine_edge", "params": { "edge": "l", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_normal_middle_right", "size": [3, 44], "recipe": "nine_edge", "params": { "edge": "r", "fill": "none" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_top_left", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "tl", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_top_right", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "tr", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_bottom_left", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "bl", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_lower_right", "size": [3, 3], "recipe": "nine_corner", "params": { "corner": "br", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_top_center", "size": [44, 3], "recipe": "nine_edge", "params": { "edge": "t", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_bottom_center", "size": [44, 3], "recipe": "nine_edge", "params": { "edge": "b", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_middle_left", "size": [3, 43], "recipe": "nine_edge", "params": { "edge": "l", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_middle_right", "size": [3, 44], "recipe": "nine_edge", "params": { "edge": "r", "fill": "none", "color": "accent" }, "module": "selection" },
+    { "id": "social_panel_list_elements_highlight_center", "size": [94, 75], "recipe": "solid", "params": { "color": "accent", "opacity": "selection" }, "module": "selection" },
+
+    {
+      "$group": "Auto-attack indicator -- a thin accent square instead of a glowing ring",
+      "module": "combat"
+    },
+    { "id": "button_autoattack_normal", "size": [63, 63], "recipe": "hidden", "params": {}, "module": "combat" },
+    { "id": "button_autoattack_mouseover", "size": [63, 63], "recipe": "ring", "params": { "color": "borderBright", "thickness": 1 }, "module": "combat" },
+    { "id": "button_autoattack_normal_pressed", "size": [63, 63], "recipe": "ring", "params": { "color": "border", "thickness": 1 }, "module": "combat" },
+    { "id": "button_autoattack_highlight", "size": [63, 63], "recipe": "ring", "params": { "color": "accent", "thickness": 2 }, "module": "combat" },
+    { "id": "button_autoattack_highlight_mouseover", "size": [63, 63], "recipe": "ring", "params": { "color": "accent", "thickness": 2, "lighten": 0.25 }, "module": "combat" },
+    { "id": "button_autoattack_highlight_pressed", "size": [63, 63], "recipe": "ring", "params": { "color": "accentDim", "thickness": 2 }, "module": "combat" },
+
+    {
+      "$group": "Utility",
+      "module": "misc"
+    },
+    { "id": "tga_empty", "size": [2, 2], "recipe": "hidden", "params": {}, "module": "misc" },
+
+    {
+      "$group": "Pure ornament. Off by default because hiding decoration can hide",
+      "$group2": "state you actually want (the dread meter backdrop, for example).",
+      "module": "experimental"
+    },
+    { "id": "no_hope_no_dread", "size": [238, 238], "recipe": "hidden", "params": {}, "module": "experimental" }
+  ]
+}
