@@ -33,7 +33,7 @@
     "misc",
     "sweep"
   ],
-  "layoutModules": ["toolbar-align"],
+  "layoutModules": ["toolbar-align", "vitals-size"],
   "options": {
     "sweepCatchAll": true,
 
@@ -50,6 +50,29 @@
 
     "hideWebstoreButton": false,
     "hideLevelMeterGlass": true,
-    "hideLevelMeterCaps": true
+    "hideLevelMeterCaps": true,
+
+    "$vitals": [
+      "Big, square morale and power bars. The stock ones are sized for a 2007",
+      "screen and read as slivers at 1440p.",
+      "",
+      "They are rectangles already; the round look came from the carved frame",
+      "around them, which the sweep clears. So size is the only thing left to",
+      "set, and vitalBarHeight is the number that makes them feel ElvUI-ish.",
+      "",
+      "vitalBarLeft is the gap that leaves room for the portrait. If the bars",
+      "overlap it or float too far right, that is the number to change."
+    ],
+    "vitalsX": 30,
+    "vitalsY": 30,
+    "vitalsWidth": 540,
+    "vitalsHeight": 130,
+    "vitalBarLeft": 104,
+    "vitalBarTop": 28,
+    "vitalBarWidth": 420,
+    "vitalBarHeight": 32,
+    "vitalBarGap": 6,
+    "hideVitalsBackground": true,
+    "hideVitalsAnimations": false
   }
 }
