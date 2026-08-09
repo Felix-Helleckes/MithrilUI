@@ -23,5 +23,24 @@
     "sweep"
   ],
   "layoutModules": [],
-  "options": {}
+  "options": {
+    "$sweepCatchAll": [
+      "OFF, and this is the most important setting in the project.",
+      "",
+      "The catch-all clears every asset no named rule recognised. It is where",
+      "the minimal look comes from, and it is also where every regression came",
+      "from: black blocks over the portrait, invisible toolbar buttons, a",
+      "broken loading progress bar. Each was a different unknown asset, found",
+      "only by someone hitting it in game.",
+      "",
+      "About 450 assets cannot be identified from their name alone, and an",
+      "unverifiable rule that silently deletes interface elements is not worth",
+      "the ornament it removes. With it off, only assets a named rule actually",
+      "recognises get touched -- still around 1450 of them.",
+      "",
+      "Turn it on with the `full` profile if you want maximum flatness and are",
+      "willing to report what breaks."
+    ],
+    "sweepCatchAll": false
+  }
 }

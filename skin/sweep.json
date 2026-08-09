@@ -34,6 +34,9 @@
   ],
   "exclude": [
     "icon",
+    "progress",
+    "^load",
+    "tracker",
     "^bag\\d",
     "^bag_",
     "^inventory_",
