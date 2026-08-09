@@ -128,7 +128,7 @@
       "role": "sweepBar",
       "color": "panel",
       "opacity": 0.88,
-      "fillFraction": 0.55,
+      "fillFraction": 0.80,
       "debugColor": "#00ffff"
     },
     {

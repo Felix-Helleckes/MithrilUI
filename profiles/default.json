@@ -48,7 +48,17 @@
     "sideButtonY": 20,
     "sideButtonsStacked": false,
 
-    "hideWebstoreButton": false,
+    "$outliers": [
+      "Three things break the button row regardless of where the slots go:",
+      "the store button (drawn larger and higher than everything around it),",
+      "the action bar page switcher, and a small chevron. The first two have",
+      "element IDs and are handled here. The chevron does not, and needs an",
+      "ident pass to identify.",
+      "",
+      "pageSwitcherX is measured from the left edge of the toolbar strip."
+    ],
+    "hideWebstoreButton": true,
+    "pageSwitcherX": 640,
     "hideLevelMeterGlass": true,
     "hideLevelMeterCaps": true,
 

@@ -57,10 +57,25 @@
     </Element>
 
     <!-- @if hideWebstoreButton -->
-    <!-- The store button. Its plate is cleared in art as well, so hiding the
-         element here is what stops it being an invisible click target. -->
+    <!-- The store button is drawn much larger than the surrounding buttons and
+         sits higher, so it breaks the row no matter where the others go. -->
     <Element ID="Toolbar_WebstoreButton" X="0" Y="0" Width="1" Height="1"></Element>
     <!-- @endif -->
+
+    <!-- @if !hideWebstoreButton -->
+    <!-- Kept, but forced to the same size and baseline as everything else. -->
+    <Element ID="Toolbar_WebstoreButton"
+             X="{{ rightEdge + sideButtonSize + sideButtonGap }}"
+             Y="{{ sideButtonY }}"
+             Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <!-- @endif -->
+
+    <!-- The action bar page switcher: the stacked up/down arrows. Left at its
+         own size, but pulled onto the same baseline as the button rows. -->
+    <Element ID="Toolbar_Quickslot_Page"
+             X="{{ pageSwitcherX }}"
+             Y="{{ sideButtonY }}"
+             Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
 
     <!--
       Left cluster. Row 1 runs 1..4, row 2 runs 5..7 when sideButtonRows is 2,
