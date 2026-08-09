@@ -78,6 +78,9 @@
     "^loading",
     "splash",
 
+    "avatar",
+    "^(red|blue|green|yellow|white|black|grey|gray|orange|purple)_\\d+$",
+    "^Base_(Non)?Select$",
     "checkbox",
     "scrollbar.*thumb",
     "^hope_",
