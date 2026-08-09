@@ -9,6 +9,8 @@ Recipes are registered with @recipe and receive (canvas, theme, params).
 
 from __future__ import annotations
 
+import colorsys
+import hashlib
 import json
 import math
 import re
@@ -301,6 +303,7 @@ def generate_sweep(
     rle: bool = False,
     catch_all: bool = True,
     debug: bool = False,
+    debug_unique: bool = False,
     verbose: bool = False,
 ) -> tuple[list[dict], dict[str, int]]:
     """Flatten every ArtAssetID the hand-written manifest does not cover.
@@ -331,6 +334,25 @@ def generate_sweep(
         if line.strip() and not line.startswith("#")
     ]
 
+    def unique_color(asset_id: str) -> RGBA:
+        """A vivid, stable colour per asset ID.
+
+        Identification mode gives every single asset its own colour and writes
+        a legend beside the skin. Screenshot the thing you are asking about,
+        read the pixel, look it up: the answer is the exact ArtAssetID rather
+        than a category. That is the only way to name an asset whose ID gives
+        no hint what it draws, which is most of them.
+
+        Kept saturated and mid-bright so JPEG screenshots stay legible.
+        """
+        digest = hashlib.md5(asset_id.encode("utf-8")).digest()
+        hue = digest[0] / 255.0
+        saturation = 0.70 + (digest[1] / 255.0) * 0.30
+        value = 0.55 + (digest[2] / 255.0) * 0.40
+        r, g, b = colorsys.hsv_to_rgb(hue, saturation, value)
+        return (clamp(r * 255), clamp(g * 255), clamp(b * 255), 255)
+
+    legend: list[tuple[str, str]] = []
     shared: dict[str, str] = {}       # role -> relative file path
     written: list[dict] = []
     stats = {
@@ -353,6 +375,25 @@ def generate_sweep(
 
         if matched.get("catchAll"):
             stats["catchAll"] += 1
+
+        if debug_unique:
+            color = unique_color(asset_id)
+            # 8x8 is plenty: the client stretches it, and 1900 of these cost
+            # half a megabyte instead of a hundred.
+            canvas = Canvas(8, 8)
+            canvas.fill_rect(0, 0, 8, 8, color)
+            relative = Path("art") / "ident" / f"{asset_id}.tga"
+            canvas.save(out_dir / relative, rle=rle)
+            hex_code = f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}"
+            legend.append((hex_code, asset_id))
+            written.append({
+                "id": asset_id,
+                "file": relative.as_posix().replace("/", "\\"),
+                "module": "sweep",
+                "bytes": 0,
+            })
+            stats["swept"] += 1
+            continue
 
         role = matched["role"]
         if role not in shared:
@@ -378,6 +419,19 @@ def generate_sweep(
             {"id": asset_id, "file": shared[role], "module": "sweep", "bytes": 0}
         )
         stats["swept"] += 1
+
+    if legend:
+        legend_path = out_dir / "debug-legend.txt"
+        lines = [
+            "# MithrilUI identification legend",
+            "# Every swept asset drawn in its own colour. Screenshot the element",
+            "# you are asking about, read the pixel colour, find it here.",
+            "#",
+            "# Look one up:  python tools/debug_lookup.py \"#a1b2c3\"",
+            "",
+        ]
+        lines += [f"{hex_code}  {asset_id}" for hex_code, asset_id in sorted(legend)]
+        legend_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     # Record the real file sizes once, against the first mapping that uses each.
     counted: set[str] = set()

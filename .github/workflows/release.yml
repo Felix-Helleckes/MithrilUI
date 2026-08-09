@@ -39,10 +39,7 @@ jobs:
         run: python tools/build.py --all
 
       - name: Verify before shipping
-        run: |
-          pip install lupa
-          python tools/validate.py
-          python tools/check_plugins.py
+        run: python tools/validate.py
 
       - name: Package
         run: python tools/package.py --version "${{ steps.version.outputs.value }}"

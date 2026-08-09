@@ -22,7 +22,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import gen_art
-import gen_lua
 import gen_skin
 import validate
 from theme import Theme, discover
@@ -168,6 +167,7 @@ def build_one(
             rle=rle,
             catch_all=profile.get("options", {}).get("sweepCatchAll", True),
             debug=profile.get("options", {}).get("sweepDebug", False),
+            debug_unique=profile.get("options", {}).get("sweepDebugUnique", False),
             verbose=verbose,
         )
         art_records = art_records + sweep_records
@@ -212,8 +212,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rle", action="store_true",
                         help="RLE-compress TGAs (much smaller; verify in-game before relying on it)")
     parser.add_argument("--no-validate", action="store_true", help="skip the post-build check")
-    parser.add_argument("--no-lua", action="store_true",
-                        help="do not refresh the shared palette in plugins/MithrilUI/Core")
     parser.add_argument("--list", action="store_true", help="list available themes and profiles")
     parser.add_argument("-v", "--verbose", action="store_true", help="print every generated asset")
     args = parser.parse_args(argv)
@@ -252,12 +250,6 @@ def main(argv: list[str] | None = None) -> int:
         target, _ = build_one(profile, theme, rle=args.rle, verbose=args.verbose)
         built.append(target)
 
-    # Keep the Lua palette in step with the skin. With --all there is no single
-    # answer, so the last theme built wins; that is the one you were looking at.
-    if not args.no_lua:
-        lua_theme = combinations[-1][1]
-        gen_lua.generate(lua_theme)
-        print(f"\npalette   plugins/MithrilUI/Core/ThemeColors.lua <- {lua_theme.id}")
 
     if args.no_validate:
         print(f"\nBuilt {len(built)} skin(s) into {DIST_DIR}")

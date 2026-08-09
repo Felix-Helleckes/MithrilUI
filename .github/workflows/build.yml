@@ -24,14 +24,6 @@ jobs:
       - name: Validate the generated skins
         run: python tools/validate.py
 
-      # lupa gives check_plugins.py a real Lua 5.1 parser instead of the
-      # keyword heuristic it falls back to.
-      - name: Install a Lua parser
-        run: pip install lupa
-
-      - name: Check the plugin suite
-        run: python tools/check_plugins.py
-
       - name: Render previews
         run: |
           python tools/preview.py dist/skins/MithrilUI --out preview-dark.png

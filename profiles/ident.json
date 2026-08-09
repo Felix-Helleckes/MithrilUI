@@ -1,0 +1,28 @@
+{
+  "id": "ident",
+  "name": "MithrilUI Ident",
+  "$comment": [
+    "Identification skin. Every asset this skin controls is drawn in its own",
+    "unique colour, and a legend is written next to the skin.",
+    "",
+    "Use it when something looks wrong and its name gives no clue which asset",
+    "is responsible, which is most of them: most ArtAssetIDs say nothing about",
+    "where they appear. The debug profile answers 'which rule did that'; this",
+    "one answers 'which exact asset is that'.",
+    "",
+    "  1. python tools/build.py --profile ident && python tools/install.py --skins-only",
+    "  2. pick 'MithrilUI Ident' in game, screenshot the element in question",
+    "  3. python tools/debug_lookup.py \"#a1b2c3\"",
+    "",
+    "Anything that keeps its original look is drawn by the client and cannot",
+    "be reached from a skin at all."
+  ],
+  "theme": "mithril-dark",
+  "resolution": [1920, 1080],
+  "artModules": ["sweep"],
+  "layoutModules": [],
+  "options": {
+    "sweepDebugUnique": true,
+    "sweepCatchAll": true
+  }
+}
