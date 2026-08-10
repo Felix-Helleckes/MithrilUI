@@ -67,27 +67,39 @@ Full walkthrough and troubleshooting in [docs/INSTALL.md](docs/INSTALL.md).
 
 ## What is in it
 
-**~2100 replaced assets.** 137 are hand-tuned against the documented ArtAssetID
+**~1800 replaced assets.** 139 are hand-tuned against the documented ArtAssetID
 dictionary — panel bodies, 9-slice frames, title bars, buttons, tabs, chat,
 list selections. The rest come from the **sweep**: an ordered set of name
-patterns over the full 2622-entry asset list, because the official dictionary
-dates from 2007 and covers barely 5% of what the modern client draws.
+patterns over a 2795-entry asset list mined from two shipping skins, because
+the official dictionary dates from 2007 and covers barely 5% of what the
+modern client draws.
 
 The sweep's governing rule is that removing ornament means making it invisible,
-not painting a dark rectangle over it:
+not painting a dark rectangle over it — a dark fill on an unknown asset covers
+whatever the client draws underneath:
 
 | Group | Treatment |
 |---|---|
-| HUD ornament (vitals plates, gambit frames) | cleared |
+| HUD ornament (the carved plates around vitals) | cleared |
+| Toolbar plate, its end caps, its glass sheen | dark, bottom 80% only |
 | Window bodies, backdrops | 72% flat fill |
 | Buttons, slots, tabs | 55% translucent plate |
 | Hover / pressed / selection | light accent wash |
-| Icons, quest difficulty, item rarity, class pips | **never touched** (597 assets) |
+| XP bar fills | flat accent, green for rested, dim for suppressed |
+| Icons, class resources, quest difficulty, item rarity, checkboxes, scrollbars, loading bars, the map marker | **never touched** (866 assets) |
 | Everything else — frames, corners, caps, filigree | cleared |
 
-The `declutter` profile additionally removes the store button and the XP-bar
-gloss, and pins the toolbar to the bottom centre. Note that pinning it means
-Ctrl+\ can no longer move it, which is why it is not the default.
+That last "never touched" row grew from 597 to 866 during testing, one report
+at a time: the loading bar, the toolbar buttons, the map arrow and a Warden's
+gambit symbols all looked like ornament by name and were not. A name-based
+rule cannot tell decoration from mechanics, so anything it cannot positively
+identify is left alone.
+
+**Bonus: an alignment grid that appears only in the UI layout editor.** The
+client draws `hidden_dragbar_normal` over movable panels while the editor is
+open and nowhere else, so mapping it gives a "show only in layout mode"
+overlay with no logic involved — which is just as well, since neither a skin
+nor a plugin can detect that mode.
 
 ## Tools
 
@@ -105,11 +117,15 @@ one JSON file that drives every asset in the skin.
 | `tools/debug_lookup.py` | Turns a colour picked out of a screenshot back into the ArtAssetID that drew it |
 
 ```bash
-python tools/build.py --profile declutter --resolution 2560x1440
+python tools/build.py --resolution auto
 python tools/build.py --theme mithril-ash
-python tools/build.py --all
+python tools/build.py --profile ident
 python tools/preview.py --sheet
 ```
+
+`--resolution auto` reads the value out of LOTRO's own `UserPreferences.ini`,
+because building a layout for the wrong resolution is the easiest mistake to
+make and the answer is already on disk.
 
 ## Making it yours
 
@@ -124,40 +140,68 @@ Adding a look means one function in `tools/gen_art.py`.
 
 ## Diagnosing a skin
 
-Most ArtAssetIDs say nothing about where they appear, and LOTRO reports a bad
-skin by silently leaving it out of the list. Two diagnostic profiles exist so
-"which asset is that?" is a lookup rather than a guessing game.
+Most ArtAssetIDs say nothing about where they appear — the world map's player
+arrow is called `note_avatar` — and LOTRO reports a bad skin by silently
+leaving it out of the list. So there is a diagnostic skin that paints every
+asset it controls in its own colour, and a scanner that reads a screenshot
+back:
 
 ```bash
-python tools/build.py --profile debug    # colour by rule category
-python tools/build.py --profile ident    # unique colour per asset + legend
+python tools/build.py --profile ident && python tools/install.py --skins-only
 ```
 
-Pick the skin in game, screenshot the element you are wondering about, then:
+Pick **MithrilUI Dark (Ident)** in game, screenshot the area in question, then:
 
 ```bash
-python tools/debug_lookup.py "#a1b2c3"
+python tools/scan_screenshot.py shot.jpg --bottom 240
 ```
+
+That names every asset in the frame with its pixel count and bounding box, so
+one screenshot answers a whole region instead of one element. Matching is
+nearest-neighbour with a tolerance, since LOTRO writes JPEGs.
 
 Anything that keeps its original look under `ident` is drawn by the client and
 cannot be reached from a skin at all — which is itself the answer to a whole
-class of question.
+class of question, including the minimap's gold rim.
 
 ## Status
 
-**v0.2.0 — in-game tested, still being tuned.**
+**v1.0.0 — played on, not just built.**
 
-The tooling is solid: every asset generates, all builds pass the validator, and
-the generated XML parses. The sweep's pattern rules are the part still settling
-— they were built from in-game evidence and each round of feedback moves an
-asset group between "clear it", "fill it" and "leave it alone".
+Every asset generates, all builds pass the validator, and the generated XML
+parses. More to the point, this was used through a levelling run and fixed
+against what actually broke rather than against a checklist.
 
-Known gaps, in rough order of interest:
+**Read this before installing.** About 280 assets are cleared by a catch-all
+rule because no named rule recognises them, and their names give no clue what
+they draw. Every regression this project has had came from that rule, and each
+one was found by a player noticing something missing, not by testing:
 
-- Layout modules beyond the toolbar (bags, character panel, chat placement)
-- The vitals layout module needs measured numbers and ships disabled
-- Flat replacement icons for the toolbar pictograms
-- Sweep rules for the world map and minimap are unverified
+| Found | Was actually |
+|---|---|
+| Black blocks over the portrait | An opaque fill on an unknown asset |
+| Toolbar buttons gone | `bag1_normal` *is* the button, not a frame around it |
+| Loading bar broken | `progress_overlay_*` |
+| Map arrow missing | `note_avatar` |
+| Warden gambit symbols gone | `gambit_orangestar` and friends |
+
+All of those are fixed and excluded. The point is that the list was found this
+way, so **if something disappears that you need, please report it** — the fix
+is one line, and the asset almost certainly has a name nobody would guess.
+
+Verified on a Warden at 2560×1440. Class-specific displays for Champion,
+Brawler, Weaver and Rune-Keeper are protected by rule and look correct in the
+manifest, but have not been seen in game.
+
+Known gaps:
+
+- The minimap cannot be skinned at all — no panel, element or art ID for it
+  exists in any of the ~4500 identifiers mined from two shipping skins
+- Toolbar button alignment needs geometry measured against the *stock* toolbar;
+  the module ships disabled because the only numbers available describe another
+  skin's redesign, and applying them was worse than stock
+- Fonts cannot be changed by any means: no font asset, no font file on disk, no
+  config key. Size only, via the game's own options
 
 ## Credits
 
