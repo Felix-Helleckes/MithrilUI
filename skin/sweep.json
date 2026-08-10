@@ -79,6 +79,7 @@
     "splash",
 
     "avatar",
+    "gambit",
     "^(red|blue|green|yellow|white|black|grey|gray|orange|purple)_\\d+$",
     "^Base_(Non)?Select$",
     "checkbox",
@@ -136,14 +137,20 @@
     {
       "$note": [
         "HUD ornament, matched before anything else. These are the carved",
-        "plates behind the morale globe, the opponent frame and the gambit",
-        "display, shipped in dozens of anniversary and cosmetic variants.",
+        "plates behind the morale globe and the opponent frame, shipped in",
+        "dozens of anniversary and cosmetic variants.",
         "",
         "They are decoration wrapped around a bar, not a background behind",
         "content, so filling them produces exactly the dark slab under the",
-        "character that made this look worse rather than cleaner. They go."
+        "character that made this look worse rather than cleaner. They go.",
+        "",
+        "This rule used to match gambit too, which cleared gambit_orangestar,",
+        "gambit_pinkheart and gambit_yellowmoon: a Warden's three gambit",
+        "builders, i.e. the entire class mechanic rather than a frame around",
+        "it. Now excluded outright. A class that reads its rotation off three",
+        "symbols cannot afford to lose them to a pattern match."
       ],
-      "match": "(vitals|gambit)",
+      "match": "vitals",
       "role": "sweepClear",
       "color": "panel",
       "opacity": 0.0,
