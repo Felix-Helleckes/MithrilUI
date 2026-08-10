@@ -25,7 +25,7 @@
     "panel": 0.90,
     "header": 0.95,
     "button": 0.95,
-    "chat": 0.55,
+    "chat": 0.80,
     "selection": 0.30,
     "selectionHot": 0.50,
     "overlay": 0.60
