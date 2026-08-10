@@ -323,7 +323,16 @@ def r_arrow(canvas: Canvas, theme: Theme, params: dict) -> None:
 
     Drawn rather than left to the client because "leave it alone" only works
     while no rule touches it, and this asset has been lost twice already. A
-    generated arrow is one the skin controls and cannot silently drop.
+    generated asset is one the skin controls and cannot silently drop.
+
+    ORIENTATION MATTERS. The client rotates this by the character's facing,
+    around the image centre, and its zero direction is EAST. An arrow drawn
+    pointing north therefore reads ninety degrees out on the minimap. Verified
+    against the copy a shipping skin uses, which points right.
+
+    The shape also has to stay inside a margin: it rotates within the image,
+    so anything touching the edge sweeps outside the intended footprint and
+    covers its surroundings at some angles.
 
     Red by default: it has to stay findable against parchment, snow and
     night-time terrain alike, which the theme's muted palette would not.
@@ -332,16 +341,30 @@ def r_arrow(canvas: Canvas, theme: Theme, params: dict) -> None:
     fill = theme.color(params.get("color", "#e11d1d"))
     outline = theme.color(params.get("outline", "#000000"))
 
+    # Degrees clockwise from east, the client's zero.
+    headings = {"right": 0.0, "down": 90.0, "left": 180.0, "up": 270.0}
+    angle = math.radians(headings.get(params.get("direction", "right"), 0.0))
+    cos_a, sin_a = math.cos(angle), math.sin(angle)
+    cx, cy = w / 2.0, h / 2.0
+
+    def place(points):
+        out = []
+        for nx, ny in points:
+            # Normalised coordinates around the centre, then rotated.
+            dx, dy = (nx - 0.5) * w, (ny - 0.5) * h
+            out.append((cx + dx * cos_a - dy * sin_a, cy + dx * sin_a + dy * cos_a))
+        return out
+
     def shape(inset: float):
         return [
-            (w * 0.5, h * (0.02 + inset)),                    # tip
-            (w * (0.97 - inset), h * (0.97 - inset)),          # right base
-            (w * 0.5, h * (0.68 - inset * 0.5)),               # notch
-            (w * (0.03 + inset), h * (0.97 - inset)),          # left base
+            (0.92 - inset, 0.50),                    # tip
+            (0.28 + inset, 0.23 + inset * 0.8),      # upper tail
+            (0.45 + inset, 0.50),                    # notch
+            (0.28 + inset, 0.77 - inset * 0.8),      # lower tail
         ]
 
-    _fill_polygon(canvas, shape(0.0), outline)
-    _fill_polygon(canvas, shape(0.14), fill)
+    _fill_polygon(canvas, place(shape(0.0)), outline)
+    _fill_polygon(canvas, place(shape(0.06)), fill)
 
 
 @recipe("gradient")
