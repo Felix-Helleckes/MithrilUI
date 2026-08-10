@@ -367,6 +367,40 @@ def r_arrow(canvas: Canvas, theme: Theme, params: dict) -> None:
     _fill_polygon(canvas, place(shape(0.06)), fill)
 
 
+@recipe("grid")
+def r_grid(canvas: Canvas, theme: Theme, params: dict) -> None:
+    """An alignment overlay for the UI layout editor.
+
+    Mapped onto hidden_dragbar_normal, which the client draws over every
+    movable panel *only while the layout editor is open*. That gives the
+    "show it only then" behaviour for free: the condition is the game's, not
+    ours, and a skin has no logic to express it otherwise.
+
+    Diagonal hatching rather than a square grid on purpose. The asset is
+    stretched to each panel's size, so horizontal and vertical spacing would
+    come out different on every panel; diagonals stay legible as a pattern
+    whatever the aspect ratio. The border marks the panel's true bounds,
+    which is what you actually align against.
+    """
+    fill = theme.color(params.get("color", "accent"), opacity=params.get("opacity", 0.16))
+    line = theme.color(params.get("color", "accent"), opacity=params.get("lineOpacity", 0.5))
+    edge = theme.color(params.get("borderColor", params.get("color", "accent")),
+                       opacity=params.get("borderOpacity", 0.95))
+
+    canvas.fill_rect(0, 0, canvas.width, canvas.height, fill)
+
+    spacing = max(4, int(params.get("spacing", 16)))
+    thickness = max(1, int(params.get("lineWidth", 2)))
+    # Two diagonal families, drawn as offset columns so no trigonometry and
+    # no gaps at any aspect ratio.
+    for offset in range(-canvas.height, canvas.width + canvas.height, spacing):
+        for step in range(canvas.height):
+            canvas.blend_rect(offset + step, step, thickness, 1, line)
+
+    canvas.stroke_rect(0, 0, canvas.width, canvas.height, edge,
+                       max(1, int(params.get("borderWidth", 3))), "tlbr")
+
+
 @recipe("gradient")
 def r_gradient(canvas: Canvas, theme: Theme, params: dict) -> None:
     top = theme.color(params.get("from", "panelAlt"), opacity=params.get("opacity", "panel"))

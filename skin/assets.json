@@ -217,6 +217,16 @@
     },
 
     {
+      "$group": "Layout editor overlay. The client draws these only while the UI",
+      "$group2": "layout editor is open (Esc menu, or Ctrl+backslash), so mapping",
+      "$group3": "them gives a 'visible only in layout mode' overlay without any",
+      "$group4": "logic, which a skin could not express anyway.",
+      "module": "layoutgrid"
+    },
+    { "id": "hidden_dragbar_normal", "size": [128, 128], "recipe": "grid", "params": { "color": "accent", "opacity": 0.14, "lineOpacity": 0.40, "borderOpacity": 0.9, "spacing": 16, "lineWidth": 2, "borderWidth": 3 }, "module": "layoutgrid" },
+    { "id": "hidden_dragbar_normal_activated", "size": [128, 128], "recipe": "grid", "params": { "color": "good", "opacity": 0.26, "lineOpacity": 0.65, "borderOpacity": 1.0, "spacing": 16, "lineWidth": 2, "borderWidth": 4 }, "module": "layoutgrid" },
+
+    {
       "$group": "Pure ornament. Off by default because hiding decoration can hide",
       "$group2": "state you actually want (the dread meter backdrop, for example).",
       "module": "experimental"
