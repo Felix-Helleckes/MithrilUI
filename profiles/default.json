@@ -33,7 +33,24 @@
     "misc",
     "sweep"
   ],
-  "layoutModules": ["toolbar-align", "vitals-size"],
+  "$layoutNote": [
+    "toolbar-align is deliberately NOT enabled.",
+    "",
+    "Touching any child of the toolbar forces declaring the parent's geometry,",
+    "and that cascades: the quickslot row, the XP bar and both button clusters",
+    "all have to be positioned by hand. The numbers available to do that were",
+    "measured from another skin's own custom toolbar design, not from the",
+    "stock one, so applying them rearranged the bar into that skin's shape",
+    "instead of straightening ours. The result was worse than stock.",
+    "",
+    "The reference pack ships the same choice: its Universal variant contains",
+    "no toolbar block at all and leaves the layout to the client.",
+    "",
+    "Cost of leaving it off: the store button stays, and the side buttons keep",
+    "their staggered heights. Benefit: the arrangement is the one the game",
+    "intends, and Ctrl+backslash still moves the toolbar."
+  ],
+  "layoutModules": ["vitals-size"],
   "options": {
     "sweepCatchAll": true,
 
