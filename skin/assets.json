@@ -207,13 +207,14 @@
     { "id": "tga_empty", "size": [2, 2], "recipe": "hidden", "params": {}, "module": "misc" },
 
     {
-      "$group": "The map player marker. 28x28 confirmed against a shipping skin.",
-      "$group2": "Drawn here rather than left to the client, because leaving it",
-      "$group3": "alone only holds while no rule reaches it, and it has gone",
-      "$group4": "missing twice. An explicit mapping cannot be swept away.",
+      "$group": "The map player marker (note_avatar) is deliberately NOT mapped.",
+      "$group2": "Drawing it meant owning its rotation, and the client's zero",
+      "$group3": "heading differs between the world map and the minimap, so no",
+      "$group4": "single orientation is right on both. The client's own arrow",
+      "$group5": "handles that correctly, so it is left alone. `avatar` stays in",
+      "$group6": "the sweep exclusions so no rule can clear it either.",
       "module": "misc"
     },
-    { "id": "note_avatar", "size": [28, 28], "recipe": "arrow", "params": { "color": "#e11d1d", "outline": "#000000" }, "module": "misc" },
 
     {
       "$group": "Pure ornament. Off by default because hiding decoration can hide",

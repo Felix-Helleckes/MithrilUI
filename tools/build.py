@@ -147,14 +147,9 @@ def build_one(
           f"{profile['resolution'][0]}x{profile['resolution'][1]}")
 
     started = time.perf_counter()
-    # The client's zero heading for the map marker was inferred from another
-    # skin, not measured, so it stays adjustable without touching the manifest.
-    options = profile.get("options", {})
     art_records = gen_art.generate(
         SKIN_DIR / "assets.json", theme, target, modules=modules, rle=rle,
-        param_overrides={
-            "note_avatar": {"direction": options.get("mapArrowDirection", "right")}
-        },
+        param_overrides=profile.get("artParams", {}),
         verbose=verbose,
     )
     total_bytes = sum(r["bytes"] for r in art_records)
