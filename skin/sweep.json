@@ -219,6 +219,18 @@
       "debugColor": "#00ff88"
     },
     {
+      "$note": [
+        "The plate behind a level number. It shows up as a grey box under the",
+        "target's level and has no counterpart on the player frame, so it is",
+        "asymmetric clutter rather than a background. Cleared, not filled."
+      ],
+      "match": "^level_background",
+      "role": "sweepClear",
+      "color": "panel",
+      "opacity": 0.0,
+      "debugColor": "#ff0000"
+    },
+    {
       "$note": "Hover feedback. Kept, because losing it makes the UI feel dead.",
       "match": "(_rollover|_mouseover|_hover|_highlighted)$",
       "role": "sweepHover",

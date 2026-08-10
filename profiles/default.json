@@ -43,28 +43,38 @@
       "headings, so no single drawn orientation is correct on both."
     ],
 
-    "$toolbar": "Widths are generous: too wide only adds empty space, too narrow clips buttons.",
-    "toolbarWidth": 1100,
-    "toolbarHeight": 64,
-    "mainBarWidth": 560,
-    "leftEdge": 8,
-    "rightEdge": 1092,
-    "sideButtonSize": 32,
-    "sideButtonGap": 2,
-    "sideButtonY": 20,
-    "sideButtonsStacked": false,
-
-    "$outliers": [
-      "Three things break the button row regardless of where the slots go:",
-      "the store button (drawn larger and higher than everything around it),",
-      "the action bar page switcher, and a small chevron. The first two have",
-      "element IDs and are handled here. The chevron does not, and needs an",
-      "ident pass to identify.",
+    "$toolbar": [
+      "Read off a shipping skin at 2560x1440 rather than guessed, so these are",
+      "the client's real proportions. All offsets are relative to the toolbar",
+      "strip, so only toolbarWidth and toolbarHeight relate to screen size.",
       "",
-      "pageSwitcherX is measured from the left edge of the toolbar strip."
+      "Every side button sits on buttonY, which is what straightens the row."
     ],
+    "toolbarWidth": 645,
+    "toolbarHeight": 100,
+    "mainRowY": 45,
+
+    "buttonY": 69,
+    "buttonW": 24,
+    "buttonH": 18,
+    "buttonStep": 24,
+    "autoAttackX": 34,
+    "mainMenuX": 66,
+    "leftStart": 90,
+    "rightStart": 389,
+    "storeX": 589,
+
+    "quickslotX": 113,
+    "quickslotY": 28,
+    "quickslotWidth": 420,
+    "quickslotHeight": 35,
+    "pageSwitcherX": 543,
+
+    "xpBarY": 85,
+    "xpBarWidth": 508,
+    "xpBarHeight": 12,
+
     "hideWebstoreButton": true,
-    "pageSwitcherX": 640,
     "hideLevelMeterGlass": true,
     "hideLevelMeterCaps": true,
 

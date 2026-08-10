@@ -1,34 +1,38 @@
 <!--
-  Straighten the toolbar.
+  Toolbar layout: one baseline for every button flanking the action bar.
 
-  By default the buttons flanking the action bar sit at staggered heights,
-  following the curve of the wooden plate they were drawn on. With the plate
-  gone the stagger has nothing to follow and just looks crooked, so this puts
-  every side button on one baseline at a uniform size.
+  THE PANEL IS CALLED "Toolbar", NOT "ID_UISkin_Toolbar".
 
-  HOW THIS WORKS, and why the numbers below are only a starting point:
+  That one detail cost several rounds. Every other panel in the game follows
+  the ID_UISkin_* convention, so the toolbar looks like it should too, and a
+  wrong PanelFile ID is ignored in silence: the skin loads, the art applies,
+  and the entire layout block simply does nothing. Nothing warns you.
 
-  The skin engine has no "align" verb. The only way to straighten elements is
-  to state every one of their positions explicitly, which also means stating
-  their parent's geometry. So this module fully determines the toolbar layout
-  rather than nudging it, and the defaults are computed from your resolution
-  rather than measured from the client.
+  The geometry below is not invented. It was read out of a shipping skin that
+  demonstrably works, at 2560x1440:
 
-  Expect one tuning round. Everything you would want to change is a number in
-  your profile's `options`, no XML editing:
+    ToolbarField          645 x 100, centred, flush to the bottom
+    side buttons          24 x 18, baseline Y=69, spaced 24 apart
+    left cluster          starts X=90   (slots 1 to 7)
+    right cluster         starts X=389  (slots 1 to 8)
+    auto attack ring      20 x 20 at X=34
+    main menu             24 x 18 at X=66
+    store button          20 x 20 at X=589
+    quickslot row         420 x 35 at X=113, Y=28
+    XP bar (LevelMeter)   508 x 12 at X=66, Y=85
 
-    toolbarWidth / toolbarHeight    the strip the whole toolbar occupies
-    sideButtonSize                  edge length of one flanking button
-    sideButtonGap                   space between them
-    sideButtonY                     baseline, measured from the toolbar top
-    sideButtonRows                  1 for a single row, 2 to stack them
-    mainBarWidth                    width reserved for the action slots
+  Note the outer placement matches what this project already computed:
+  (screenWidth - 645) / 2 and screenHeight - 100. The formula was right, the
+  sizes and the panel name were not.
 
-  TRADE-OFF: once a position is written here, the skin wins over the game's
-  own UI layout tool. Ctrl+\ can no longer move the toolbar. That is inherent
-  to skin-side positioning, not a limitation of this module.
+  Element ID casing is inconsistent in the client (ToolBarButton_Slot_1 but
+  ToolbarButton_Slot_2). The reference skin mixes them freely and works, so
+  the client compares case-insensitively. Copied as found regardless.
+
+  TRADE-OFF: positions written here beat the game's own layout tool, so
+  Ctrl+backslash can no longer move the toolbar.
 -->
-<PanelFile ID="ID_UISkin_Toolbar">
+<PanelFile ID="Toolbar">
 
   <Element ID="ToolbarField"
            X="{{ (screenWidth - toolbarWidth) / 2 }}"
@@ -36,89 +40,60 @@
            Width="{{ toolbarWidth }}"
            Height="{{ toolbarHeight }}">
 
-    <!-- The action slots, centred; the side buttons flank this. -->
-    <Element ID="ToolbarFieldMain"
-             X="{{ (toolbarWidth - mainBarWidth) / 2 }}"
-             Y="0"
-             Width="{{ mainBarWidth }}"
-             Height="{{ toolbarHeight }}">
+    <Element ID="AutoAttackIndicatorButton" X="{{ autoAttackX }}" Y="{{ buttonY - 5 }}" Width="20" Height="20"></Element>
+    <Element ID="ToolBarButton_MainMenu"    X="{{ mainMenuX }}"   Y="{{ buttonY }}"     Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
 
-      <!-- @if hideLevelMeterGlass -->
-      <Element ID="ToolbarFieldMain_LevelMeter_Glass_Overlay" X="0" Y="0" Width="1" Height="1"></Element>
-      <!-- @endif -->
+    <Element ID="ToolbarFieldMain" X="0" Y="{{ mainRowY }}" Width="{{ toolbarWidth }}" Height="{{ toolbarHeight - mainRowY }}">
+
+      <Element ID="LevelMeter" X="{{ mainMenuX }}" Y="{{ xpBarY }}" Width="{{ xpBarWidth }}" Height="{{ xpBarHeight }}">
+        <Element ID="LevelMeterFill" X="5" Y="{{ xpBarHeight / 3 }}" Width="{{ xpBarWidth - 5 }}" Height="{{ xpBarHeight - 4 }}">
+          <Element ID="LevelMeter_BonusMeter" X="0" Y="0" Width="{{ xpBarWidth - 5 }}" Height="{{ xpBarHeight - 4 }}"></Element>
+        </Element>
+      </Element>
 
       <!-- @if hideLevelMeterCaps -->
-      <Element ID="ToolbarFieldMain_LevelMeter_Left_Cap" X="0" Y="0" Width="1" Height="1"></Element>
-      <Element ID="ToolbarFieldMain_LevelMeter_Mid_Left_Cap" X="0" Y="0" Width="1" Height="1"></Element>
-      <Element ID="ToolbarFieldMain_LevelMeter_Mid_Right_Cap" X="0" Y="0" Width="1" Height="1"></Element>
-      <Element ID="ToolbarFieldMain_LevelMeter_Right_Cap" X="0" Y="0" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Left_Cap"      X="0" Y="{{ toolbarHeight }}" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Mid_Left_Cap"  X="0" Y="{{ toolbarHeight }}" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Mid_Right_Cap" X="0" Y="{{ toolbarHeight }}" Width="1" Height="1"></Element>
+      <Element ID="ToolbarFieldMain_LevelMeter_Right_Cap"     X="0" Y="{{ toolbarHeight }}" Width="1" Height="1"></Element>
+      <!-- @endif -->
+
+      <!-- @if hideLevelMeterGlass -->
+      <Element ID="ToolbarFieldMain_LevelMeter_Glass_Overlay" X="0" Y="{{ toolbarHeight }}" Width="1" Height="1"></Element>
       <!-- @endif -->
 
     </Element>
 
+    <!-- Left cluster: seven customisable buttons on one baseline. Which panel
+         each one opens is set in game, so they have no meaningful names. -->
+    <Element ID="ToolBarButton_Slot_1" X="{{ leftStart + 0 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolbarButton_Slot_2" X="{{ leftStart + 1 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolbarButton_Slot_3" X="{{ leftStart + 2 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolbarButton_Slot_4" X="{{ leftStart + 3 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_Slot_5" X="{{ leftStart + 4 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolbarButton_Slot_6" X="{{ leftStart + 5 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolbarButton_Slot_7" X="{{ leftStart + 6 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+
+    <!-- Right cluster: eight more, same baseline. -->
+    <Element ID="ToolbarButton_RightSlot_1" X="{{ rightStart + 0 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_2" X="{{ rightStart + 1 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_3" X="{{ rightStart + 2 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_4" X="{{ rightStart + 3 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_5" X="{{ rightStart + 4 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_6" X="{{ rightStart + 5 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_7" X="{{ rightStart + 6 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+    <Element ID="ToolBarButton_RightSlot_8" X="{{ rightStart + 7 * buttonStep }}" Y="{{ buttonY }}" Width="{{ buttonW }}" Height="{{ buttonH }}"></Element>
+
     <!-- @if hideWebstoreButton -->
-    <!-- The store button is drawn much larger than the surrounding buttons and
-         sits higher, so it breaks the row no matter where the others go. -->
-    <Element ID="Toolbar_WebstoreButton" X="0" Y="0" Width="1" Height="1"></Element>
+    <Element ID="Toolbar_WebstoreButton" X="0" Y="{{ toolbarHeight }}" Width="1" Height="1"></Element>
     <!-- @endif -->
 
     <!-- @if !hideWebstoreButton -->
-    <!-- Kept, but forced to the same size and baseline as everything else. -->
-    <Element ID="Toolbar_WebstoreButton"
-             X="{{ rightEdge + sideButtonSize + sideButtonGap }}"
-             Y="{{ sideButtonY }}"
-             Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
+    <Element ID="Toolbar_WebstoreButton" X="{{ storeX }}" Y="{{ buttonY - 5 }}" Width="20" Height="20"></Element>
     <!-- @endif -->
 
-    <!-- The action bar page switcher: the stacked up/down arrows. Left at its
-         own size, but pulled onto the same baseline as the button rows. -->
-    <Element ID="Toolbar_Quickslot_Page"
-             X="{{ pageSwitcherX }}"
-             Y="{{ sideButtonY }}"
-             Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-
-    <!--
-      Left cluster. Row 1 runs 1..4, row 2 runs 5..7 when sideButtonRows is 2,
-      otherwise everything stays on one line. The arithmetic is written out
-      per button because the template language has no loop, which also makes
-      it obvious what to nudge if one button lands wrong.
-    -->
-    <Element ID="ToolbarButton_Slot_1" X="{{ leftEdge + 0 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolbarButton_Slot_2" X="{{ leftEdge + 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_Slot_3" X="{{ leftEdge + 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolbarButton_Slot_4" X="{{ leftEdge + 3 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-
-    <!-- @if sideButtonsStacked -->
-    <Element ID="ToolbarButton_Slot_5" X="{{ leftEdge + 0 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_Slot_6" X="{{ leftEdge + 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolbarButton_Slot_7" X="{{ leftEdge + 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <!-- @endif -->
-
-    <!-- @if !sideButtonsStacked -->
-    <Element ID="ToolbarButton_Slot_5" X="{{ leftEdge + 4 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_Slot_6" X="{{ leftEdge + 5 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolbarButton_Slot_7" X="{{ leftEdge + 6 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <!-- @endif -->
-
-    <!-- Right cluster, mirrored: laid out leftwards from the right edge. -->
-    <Element ID="ToolbarButton_RightSlot_1" X="{{ rightEdge - 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_2" X="{{ rightEdge - 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_3" X="{{ rightEdge - 3 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_4" X="{{ rightEdge - 4 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-
-    <!-- @if sideButtonsStacked -->
-    <Element ID="ToolBarButton_RightSlot_5" X="{{ rightEdge - 1 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_6" X="{{ rightEdge - 2 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_7" X="{{ rightEdge - 3 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_8" X="{{ rightEdge - 4 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY + sideButtonSize + sideButtonGap }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <!-- @endif -->
-
-    <!-- @if !sideButtonsStacked -->
-    <Element ID="ToolBarButton_RightSlot_5" X="{{ rightEdge - 5 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_6" X="{{ rightEdge - 6 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_7" X="{{ rightEdge - 7 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <Element ID="ToolBarButton_RightSlot_8" X="{{ rightEdge - 8 * (sideButtonSize + sideButtonGap) }}" Y="{{ sideButtonY }}" Width="{{ sideButtonSize }}" Height="{{ sideButtonSize }}"></Element>
-    <!-- @endif -->
+    <Element ID="Toolbar_Quickslot"      X="{{ quickslotX }}" Y="{{ quickslotY }}" Width="{{ quickslotWidth }}" Height="{{ quickslotHeight }}"></Element>
+    <Element ID="Toolbar_Quickslot_Page" X="{{ pageSwitcherX }}" Y="{{ quickslotY + 7 }}" Width="30" Height="30"></Element>
 
   </Element>
 
