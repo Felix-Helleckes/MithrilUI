@@ -37,6 +37,21 @@
   "options": {
     "sweepCatchAll": true,
 
+    "$mapArrow": [
+      "Which way the drawn map marker points before the client rotates it.",
+      "One of: right, up, left, down.",
+      "",
+      "This is inferred, not measured. A shipping skin draws it pointing",
+      "right, so right is the best guess at the client's zero heading, but",
+      "the world map and the minimap may not treat it identically. If the",
+      "arrow is a quarter turn out, step to the next value and rebuild:",
+      "",
+      "  right -> down -> left -> up  is clockwise.",
+      "",
+      "  python tools/build.py --resolution auto && python tools/install.py --skins-only"
+    ],
+    "mapArrowDirection": "right",
+
     "$toolbar": "Widths are generous: too wide only adds empty space, too narrow clips buttons.",
     "toolbarWidth": 1100,
     "toolbarHeight": 64,

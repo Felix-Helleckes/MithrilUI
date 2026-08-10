@@ -554,10 +554,17 @@ def generate(
     out_dir: str | Path,
     modules: set[str] | None = None,
     rle: bool = False,
+    param_overrides: dict[str, dict] | None = None,
     verbose: bool = False,
 ) -> list[dict]:
-    """Render every enabled asset. Returns records for the skin generator."""
+    """Render every enabled asset. Returns records for the skin generator.
+
+    `param_overrides` lets a profile adjust one asset's recipe parameters
+    without editing the manifest, for the handful of values that are a matter
+    of taste or of a client convention we had to infer rather than measure.
+    """
     entries = load_manifest(manifest_path)
+    param_overrides = param_overrides or {}
     out_dir = Path(out_dir)
     written = []
 
@@ -575,7 +582,9 @@ def generate(
 
         width, height = entry["size"]
         canvas = Canvas(width, height)
-        RECIPES[recipe_name](canvas, theme, entry.get("params", {}))
+        params = dict(entry.get("params", {}))
+        params.update(param_overrides.get(entry["id"], {}))
+        RECIPES[recipe_name](canvas, theme, params)
 
         rel = Path("art") / module / f"{entry['id']}.tga"
         size_bytes = canvas.save(out_dir / rel, rle=rle)
