@@ -39,7 +39,7 @@ The API surface is `Turbine.*`, and it is read-only by design. Plugins **cannot*
 - move your character, or issue any movement command
 - use a skill, attack, or interact with an object or NPC
 - press a key, click a button, or trigger anything that appears in the Keybinding menu
-- read another player's or a monster's morale, power, position or state
+- read arbitrary world state: what is off screen, what is not targeted or grouped
 - read or write game memory
 - send or intercept network traffic
 - talk to anything outside the game
@@ -47,6 +47,12 @@ The API surface is `Turbine.*`, and it is read-only by design. Plugins **cannot*
 This is not MithrilUI being polite. These capabilities are simply not in the API.
 A plugin that wanted to bot could not, and the reason the API looks so restricted
 is precisely that the developers designed it so plugins cannot be used to cheat.
+
+**Correction.** An earlier version of this file claimed plugins cannot read a
+target's morale or power at all. That is wrong: `Turbine.Gameplay` does expose
+a target's morale, power and effects, and shipping plugins read them. The line
+that actually matters for cheating is a different one, and it holds: plugins
+can observe, but they cannot act. No movement, no skills, no keypresses.
 
 ## What MithrilUI specifically does
 
