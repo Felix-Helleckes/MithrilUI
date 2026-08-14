@@ -56,19 +56,12 @@ can observe, but they cannot act. No movement, no skills, no keypresses.
 
 ## What MithrilUI specifically does
 
-- **Reads**: your own morale, power, level, class, name, position, backpack slot
-  count, and your own effects. Screen dimensions.
-- **Writes**: its own window positions and settings, via `Turbine.PluginData`,
-  which is the sanctioned per-character save store.
-- **Draws**: its own windows, plus replacement art for the client's own panels.
+**Nothing from Layer 2.** MithrilUI is a skin and only a skin: XML plus TGA
+files. It runs no code, reads no game state and has no plugin component. It
+cannot do anything at runtime, because there is no runtime.
 
-Everything the game API is asked for goes through
-[`Core/Api.lua`](../plugins/MithrilUI/Core/Api.lua), which wraps each call in
-`pcall` and records whether it worked. You can read that one file and see the
-complete list of game data MithrilUI ever touches. It is short.
-
-Run `/mithril diag` in game to print exactly which of those calls your client
-answered.
+Layer 2 is documented above only so you can judge the plugins you install
+alongside it.
 
 ## Things this project will not add
 
@@ -80,9 +73,12 @@ cheat, and crossing it is what actually gets accounts banned in any game:
 - input automation, macro playback, or key/click simulation from outside the game
 - anything that reads data the API does not offer
 
-If you ever see a "LOTRO addon" that offers target health bars for other players,
-automatic skill rotations, or a radar of nearby entities, it is not using the Lua
-API — it cannot be, the data is not there. That is the category to stay away from.
+Target health bars are fine, incidentally: the API does expose a target's
+vitals and plugins legitimately read them. What should make you suspicious is
+anything that *acts* for you, or that knows things nobody targeted: automatic
+skill rotations, a radar of nearby entities, movement or gathering automation.
+None of that is reachable through the Lua API, so anything offering it is
+reaching around the API, and that is the category to stay away from.
 
 ## Practical notes
 
